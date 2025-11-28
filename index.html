@@ -1,1 +1,55 @@
 <link rel="apple-touch-icon" href="IMG_3561.png" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NT Trading OS</title>
+
+    <!-- Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" href="IMG_3561.png">
+    <link rel="icon" href="IMG_3561.png" type="image/png">
+
+    <!-- Theme color -->
+    <meta name="theme-color" content="#16a34a">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #050810;
+            color: white;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 90%;
+        }
+
+        h1 {
+            color: #16a34a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>NT Trading OS</h1>
+        <p>Your 10-Flip System • Live Edges • Bankroll Extraction</p>
+        <p>App is live 🔥</p>
+    </div>
+
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("sw.js");
+        }
+    </script>
+</body>
+</html>
