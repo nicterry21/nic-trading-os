@@ -50,7 +50,7 @@
       background: linear-gradient(to bottom, #022c22 0, #020617 75%);
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 20;
     }
 
     .head-row {
@@ -94,6 +94,32 @@
       border-radius: 999px;
       background: #22c55e;
       box-shadow: 0 0 12px rgba(34, 197, 94, 0.9);
+    }
+
+    .tab-row {
+      margin-top: 10px;
+      display: flex;
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 999px;
+      padding: 3px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+    }
+
+    .tab-btn {
+      flex: 1;
+      border-radius: 999px;
+      border: none;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .tab-btn-active {
+      background: rgba(22, 163, 74, 0.2);
+      color: #bbf7d0;
     }
 
     main {
@@ -296,16 +322,26 @@
       margin-top: 6px;
     }
 
-    .pill-soft {
-      display: inline-flex;
+    .alert {
+      margin-bottom: 10px;
+      border-radius: 12px;
+      padding: 7px 10px;
+      background: rgba(22, 163, 74, 0.15);
+      border: 1px solid rgba(34, 197, 94, 0.6);
+      font-size: 11px;
+      color: #bbf7d0;
+      display: flex;
       align-items: center;
-      gap: 4px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      padding: 3px 7px;
-      font-size: 10px;
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--text-muted);
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .alert-strong {
+      font-weight: 600;
+    }
+
+    .hidden {
+      display: none !important;
     }
 
     .log-list {
@@ -366,6 +402,36 @@
       background: rgba(239, 68, 68, 0.12);
     }
 
+    .tag-list {
+      margin-top: 6px;
+      border-radius: 9px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      max-height: 190px;
+      overflow-y: auto;
+    }
+
+    .tag-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 8px;
+      font-size: 11px;
+      border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+    }
+
+    .tag-row:last-child {
+      border-bottom: none;
+    }
+
+    .tag-label {
+      font-weight: 500;
+    }
+
+    .tag-meta {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
     footer {
       padding: 6px 12px 12px;
       font-size: 10px;
@@ -387,171 +453,243 @@
           <span>Locked in</span>
         </div>
       </div>
+
+      <div class="tab-row">
+        <button class="tab-btn tab-btn-active" id="tabDashboardBtn">Dashboard</button>
+        <button class="tab-btn" id="tabJournalBtn">Bet Journal</button>
+      </div>
     </header>
 
     <main>
-      <!-- BANKROLL / SESSION -->
-      <section class="card">
-        <div class="card-header">
-          <div class="card-title">Bankroll · Session</div>
-          <span class="badge-primary badge" id="heatBadge">Neutral</span>
-        </div>
+      <!-- Extraction alert -->
+      <div id="alertBar" class="alert hidden">
+        <span id="alertText"></span>
+        <span class="alert-strong">Extract.</span>
+      </div>
 
-        <div class="kpi-row">
-          <div class="kpi">
-            <div class="kpi-label">Starting Bankroll</div>
-            <div class="kpi-value" id="startingBankrollDisplay">$0</div>
-            <div class="kpi-sub" id="riskPerBetDisplay">Risk / bet: $0</div>
+      <!-- DASHBOARD VIEW -->
+      <div id="dashboardView">
+        <!-- BANKROLL / SESSION -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">Bankroll · Session</div>
+            <span class="badge-primary badge" id="heatBadge">Neutral</span>
           </div>
-          <div class="kpi">
-            <div class="kpi-label">Current Balance (Today)</div>
-            <div class="kpi-value" id="currentBalanceDisplay">$0</div>
-            <div class="kpi-sub" id="pnlPercentDisplay">P/L: 0% </div>
+
+          <div class="kpi-row">
+            <div class="kpi">
+              <div class="kpi-label">Starting Bankroll</div>
+              <div class="kpi-value" id="startingBankrollDisplay">$0</div>
+              <div class="kpi-sub" id="riskPerBetDisplay">Risk / bet: $0</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Current Balance (Today)</div>
+              <div class="kpi-value" id="currentBalanceDisplay">$0</div>
+              <div class="kpi-sub" id="pnlPercentDisplay">P/L: 0% today</div>
+            </div>
           </div>
-        </div>
 
-        <div class="input-row">
-          <div class="input-group">
-            <label for="startingBankrollInput">Starting roll</label>
-            <input id="startingBankrollInput" type="number" inputmode="decimal" placeholder="e.g. 2000" />
+          <div class="input-row">
+            <div class="input-group">
+              <label for="startingBankrollInput">Starting roll</label>
+              <input id="startingBankrollInput" type="number" inputmode="decimal" placeholder="e.g. 2000" />
+            </div>
+            <div class="input-group">
+              <label for="riskPctInput">% risk / bet</label>
+              <input id="riskPctInput" type="number" inputmode="decimal" placeholder="e.g. 2.5" />
+            </div>
           </div>
-          <div class="input-group">
-            <label for="riskPctInput">% risk / bet</label>
-            <input id="riskPctInput" type="number" inputmode="decimal" placeholder="e.g. 2.5" />
+
+          <div class="input-row">
+            <div class="input-group">
+              <label for="lossLimitInput">Max loss % (day)</label>
+              <input id="lossLimitInput" type="number" inputmode="decimal" placeholder="e.g. 15" />
+            </div>
+            <div class="input-group">
+              <label for="sessionTagInput">Session tag</label>
+              <input id="sessionTagInput" type="text" placeholder="Thanksgiving board, etc." />
+            </div>
           </div>
-        </div>
 
-        <div class="input-row">
-          <div class="input-group">
-            <label for="lossLimitInput">Max loss % (day)</label>
-            <input id="lossLimitInput" type="number" inputmode="decimal" placeholder="e.g. 15" />
+          <div class="btn-row">
+            <button class="btn-primary" id="applyBankrollBtn">Lock in session</button>
+            <button class="btn-ghost" id="resetDayBtn">New day</button>
           </div>
-          <div class="input-group">
-            <label for="sessionTagInput">Session tag</label>
-            <input id="sessionTagInput" type="text" placeholder="Thanksgiving board, etc." />
+
+          <div class="tiny">
+            Rule of thumb: <strong>green = press edges, red = protect roll.</strong> Heat meter responds to your P/L vs loss limit.
           </div>
-        </div>
+        </section>
 
-        <div class="btn-row">
-          <button class="btn-primary" id="applyBankrollBtn">Lock in session</button>
-          <button class="btn-ghost" id="resetDayBtn">New day</button>
-        </div>
-
-        <div class="tiny">
-          Rule of thumb: <strong>green = press edges, red = protect roll.</strong> Heat meter responds to your P/L vs loss limit.
-        </div>
-      </section>
-
-      <!-- 10 FLIP SYSTEM -->
-      <section class="card">
-        <div class="card-header">
-          <div class="card-title">10-Flip System</div>
-          <span class="badge" id="flipStatusBadge">Flip 0 / 10</span>
-        </div>
-
-        <div class="input-row">
-          <div class="input-group">
-            <label for="flipTargetInput">Target flips</label>
-            <input id="flipTargetInput" type="number" inputmode="numeric" value="10" />
+        <!-- 10 FLIP SYSTEM -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">10-Flip System</div>
+            <span class="badge" id="flipStatusBadge">Flip 0 / 10</span>
           </div>
-          <div class="input-group">
-            <label for="flipProfitTargetInput">Profit per flip ($)</label>
-            <input id="flipProfitTargetInput" type="number" inputmode="decimal" placeholder="e.g. 200" />
+
+          <div class="input-row">
+            <div class="input-group">
+              <label for="flipTargetInput">Target flips</label>
+              <input id="flipTargetInput" type="number" inputmode="numeric" value="10" />
+            </div>
+            <div class="input-group">
+              <label for="flipProfitTargetInput">Profit per flip ($)</label>
+              <input id="flipProfitTargetInput" type="number" inputmode="decimal" placeholder="e.g. 200" />
+            </div>
           </div>
-        </div>
 
-        <div class="flip-progress">
-          <div class="progress-bar">
-            <div class="progress-fill" id="flipProgressFill"></div>
+          <div class="flip-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" id="flipProgressFill"></div>
+            </div>
+            <div class="flip-meta">
+              <span id="flipMetaLeft">0 completed</span>
+              <span id="flipMetaRight">0 / 10 · $0 per flip</span>
+            </div>
           </div>
-          <div class="flip-meta">
-            <span id="flipMetaLeft">0 completed</span>
-            <span id="flipMetaRight">0 / 10 · $0 target</span>
+
+          <div class="btn-row">
+            <button class="btn-primary" id="markFlipCompleteBtn">Mark flip complete</button>
+            <button class="btn-ghost" id="undoFlipBtn">Undo last flip</button>
           </div>
-        </div>
 
-        <div class="btn-row">
-          <button class="btn-primary" id="markFlipCompleteBtn">Mark flip complete</button>
-          <button class="btn-ghost" id="undoFlipBtn">Undo last flip</button>
-        </div>
-
-        <div class="tiny">
-          Use flips as <strong>extraction milestones</strong> – each flip is a pre-defined profit target.
-          When flips 2, 4, 6, 8, 10 hit, consider <strong>withdrawing a piece of profits.</strong>
-        </div>
-      </section>
-
-      <!-- LIVE BET ENTRY -->
-      <section class="card">
-        <div class="card-header">
-          <div class="card-title">Live Bet Input</div>
-          <span class="badge">Cheat sheet</span>
-        </div>
-
-        <div class="input-row">
-          <div class="input-group">
-            <label for="betStakeInput">Stake ($)</label>
-            <input id="betStakeInput" type="number" inputmode="decimal" placeholder="50" />
+          <div class="tiny">
+            Use flips as <strong>extraction milestones</strong> – each flip is a pre-defined profit target.
+            When flips 2, 4, 6, 8, 10 hit, consider <strong>withdrawing a piece of profits.</strong>
           </div>
-          <div class="input-group">
-            <label for="betResultInput">Outcome</label>
-            <select id="betResultInput">
-              <option value="win">Win</option>
-              <option value="loss">Loss</option>
-              <option value="cashout">Cash out</option>
-              <option value="push">Push</option>
-            </select>
+        </section>
+
+        <!-- LIVE BET INPUT -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">Live Bet Input</div>
+            <span class="badge">Cheat sheet</span>
           </div>
-        </div>
 
-        <div class="input-row">
-          <div class="input-group">
-            <label for="betReturnInput">Returned ($)</label>
-            <input id="betReturnInput" type="number" inputmode="decimal" placeholder="Return / cashout" />
+          <div class="input-row">
+            <div class="input-group">
+              <label for="betStakeInput">Stake ($)</label>
+              <input id="betStakeInput" type="number" inputmode="decimal" placeholder="50" />
+            </div>
+            <div class="input-group">
+              <label for="betResultInput">Outcome</label>
+              <select id="betResultInput">
+                <option value="win">Win</option>
+                <option value="loss">Loss</option>
+                <option value="cashout">Cash out</option>
+                <option value="push">Push</option>
+              </select>
+            </div>
           </div>
-          <div class="input-group">
-            <label for="betTagInput">Tag</label>
-            <input id="betTagInput" type="text" placeholder="1H ML, alt spread, etc." />
+
+          <div class="input-row">
+            <div class="input-group">
+              <label for="betReturnInput">Returned ($)</label>
+              <input id="betReturnInput" type="number" inputmode="decimal" placeholder="Return / cashout" />
+            </div>
+            <div class="input-group">
+              <label for="betTagInput">Tag</label>
+              <input id="betTagInput" type="text" placeholder="1H ML, alt spread, etc." />
+            </div>
           </div>
-        </div>
 
-        <div class="btn-row">
-          <button class="btn-primary" id="addBetBtn">Log bet</button>
-          <button class="btn-danger" id="clearBetsBtn">Clear log (today)</button>
-        </div>
-
-        <div class="tiny">
-          Quick rules: <strong>single / 2-leg > ladders > hail marys.</strong> Cashouts count as realized profit.
-        </div>
-      </section>
-
-      <!-- STATS & LOG -->
-      <section class="card">
-        <div class="card-header">
-          <div class="card-title">Day Stats & Log</div>
-          <span class="badge" id="betsSummaryBadge">0 bets</span>
-        </div>
-
-        <div class="kpi-row">
-          <div class="kpi">
-            <div class="kpi-label">Net P/L (today)</div>
-            <div class="kpi-value" id="pnlDisplay">$0.00</div>
-            <div class="kpi-sub" id="pnlPerBetDisplay">$0 / bet</div>
+          <div class="btn-row">
+            <button class="btn-primary" id="addBetBtn">Log bet</button>
+            <button class="btn-danger" id="clearBetsBtn">Clear log (today)</button>
           </div>
-          <div class="kpi">
-            <div class="kpi-label">Volume & hit rate</div>
-            <div class="kpi-value" id="hitRateDisplay">0%</div>
-            <div class="kpi-sub" id="volumeDisplay">$0 staked</div>
+
+          <div class="tiny">
+            Quick rules: <strong>single / 2-leg > ladders > hail marys.</strong> Cashouts count as realized profit.
           </div>
-        </div>
+        </section>
 
-        <div class="log-list" id="betLog"></div>
+        <!-- STATS & LOG -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">Day Stats & Log</div>
+            <span class="badge" id="betsSummaryBadge">0 bets</span>
+          </div>
 
-        <div class="tiny">
-          Use this as your <strong>truth mirror.</strong> Volume, hit rate, avg stake, and
-          extraction tell you when to <strong>press</strong> vs <strong>shut it down.</strong>
-        </div>
-      </section>
+          <div class="kpi-row">
+            <div class="kpi">
+              <div class="kpi-label">Net P/L (today)</div>
+              <div class="kpi-value" id="pnlDisplay">$0.00</div>
+              <div class="kpi-sub" id="pnlPerBetDisplay">$0 / bet</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Volume & hit rate</div>
+              <div class="kpi-value" id="hitRateDisplay">0%</div>
+              <div class="kpi-sub" id="volumeDisplay">$0 staked</div>
+            </div>
+          </div>
+
+          <div class="kpi-row">
+            <div class="kpi">
+              <div class="kpi-label">Return multiple</div>
+              <div class="kpi-value" id="returnMultipleDisplay">1.00x</div>
+              <div class="kpi-sub">Returned ÷ staked</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Average stake</div>
+              <div class="kpi-value" id="avgStakeDisplay">$0</div>
+              <div class="kpi-sub">Per bet</div>
+            </div>
+          </div>
+
+          <div class="log-list" id="betLog"></div>
+
+          <div class="tiny">
+            Use this as your <strong>truth mirror.</strong> Volume, hit rate, avg stake, and
+            extraction tell you when to <strong>press</strong> vs <strong>shut it down.</strong>
+          </div>
+        </section>
+      </div>
+
+      <!-- JOURNAL VIEW -->
+      <div id="journalView" class="hidden">
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">Bet Journal · Today</div>
+            <span class="badge" id="journalCountBadge">0 logged</span>
+          </div>
+
+          <div class="kpi-row">
+            <div class="kpi">
+              <div class="kpi-label">Wins</div>
+              <div class="kpi-value positive" id="journalWinsDisplay">0</div>
+              <div class="kpi-sub" id="journalWinsProfitDisplay">$0 profit</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Losses</div>
+              <div class="kpi-value negative" id="journalLossesDisplay">0</div>
+              <div class="kpi-sub" id="journalLossesProfitDisplay">$0 given back</div>
+            </div>
+          </div>
+
+          <div class="kpi-row">
+            <div class="kpi">
+              <div class="kpi-label">Cashouts</div>
+              <div class="kpi-value" id="journalCashoutDisplay">0</div>
+              <div class="kpi-sub" id="journalCashoutProfitDisplay">$0 net</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Push / neutral</div>
+              <div class="kpi-value" id="journalPushDisplay">0</div>
+              <div class="kpi-sub" id="journalPushProfitDisplay">$0 impact</div>
+            </div>
+          </div>
+
+          <div class="tiny" id="journalInsightText">
+            Log a few bets and this will start reflecting your strongest & weakest zones.
+          </div>
+
+          <div class="tiny" style="margin-top:8px;">
+            Top tags by volume & profit:
+          </div>
+          <div class="tag-list" id="tagStats"></div>
+        </section>
+      </div>
     </main>
 
     <footer>
@@ -591,7 +729,7 @@
     // State
     let state = loadState();
 
-    // DOM
+    // DOM references
     const startingBankrollDisplay = document.getElementById("startingBankrollDisplay");
     const riskPerBetDisplay = document.getElementById("riskPerBetDisplay");
     const currentBalanceDisplay = document.getElementById("currentBalanceDisplay");
@@ -619,15 +757,41 @@
     const pnlPerBetDisplay = document.getElementById("pnlPerBetDisplay");
     const hitRateDisplay = document.getElementById("hitRateDisplay");
     const volumeDisplay = document.getElementById("volumeDisplay");
+    const returnMultipleDisplay = document.getElementById("returnMultipleDisplay");
+    const avgStakeDisplay = document.getElementById("avgStakeDisplay");
     const betsSummaryBadge = document.getElementById("betsSummaryBadge");
     const betLog = document.getElementById("betLog");
 
+    // Journal DOM
+    const journalCountBadge = document.getElementById("journalCountBadge");
+    const journalWinsDisplay = document.getElementById("journalWinsDisplay");
+    const journalLossesDisplay = document.getElementById("journalLossesDisplay");
+    const journalCashoutDisplay = document.getElementById("journalCashoutDisplay");
+    const journalPushDisplay = document.getElementById("journalPushDisplay");
+    const journalWinsProfitDisplay = document.getElementById("journalWinsProfitDisplay");
+    const journalLossesProfitDisplay = document.getElementById("journalLossesProfitDisplay");
+    const journalCashoutProfitDisplay = document.getElementById("journalCashoutProfitDisplay");
+    const journalPushProfitDisplay = document.getElementById("journalPushProfitDisplay");
+    const journalInsightText = document.getElementById("journalInsightText");
+    const tagStats = document.getElementById("tagStats");
+
+    // Tabs
+    const tabDashboardBtn = document.getElementById("tabDashboardBtn");
+    const tabJournalBtn = document.getElementById("tabJournalBtn");
+    const dashboardView = document.getElementById("dashboardView");
+    const journalView = document.getElementById("journalView");
+
+    // Buttons
     const applyBankrollBtn = document.getElementById("applyBankrollBtn");
     const resetDayBtn = document.getElementById("resetDayBtn");
     const markFlipCompleteBtn = document.getElementById("markFlipCompleteBtn");
     const undoFlipBtn = document.getElementById("undoFlipBtn");
     const addBetBtn = document.getElementById("addBetBtn");
     const clearBetsBtn = document.getElementById("clearBetsBtn");
+
+    // Alert
+    const alertBar = document.getElementById("alertBar");
+    const alertText = document.getElementById("alertText");
 
     function formatMoney(v) {
       const num = Number(v) || 0;
@@ -651,8 +815,67 @@
         : 0;
       const hitRate = bets.length ? (wins / bets.length) * 100 : 0;
       const pnlPerBet = bets.length ? pnl / bets.length : 0;
+      const avgStake = bets.length ? staked / bets.length : 0;
+      const returnMultiple = staked > 0 ? returned / staked : 1;
 
-      return { staked, returned, pnl, pnlPct, hitRate, pnlPerBet };
+      return { staked, returned, pnl, pnlPct, hitRate, pnlPerBet, avgStake, returnMultiple };
+    }
+
+    function computeJournal() {
+      const bets = state.bets;
+      let wins = 0,
+        losses = 0,
+        cashouts = 0,
+        pushes = 0;
+      let winProfit = 0,
+        lossProfit = 0,
+        cashoutProfit = 0,
+        pushProfit = 0;
+
+      const tagMap = {}; // tag -> {count, staked, profit}
+
+      bets.forEach((b) => {
+        if (b.result === "win") {
+          wins++;
+          winProfit += b.profit;
+        } else if (b.result === "loss") {
+          losses++;
+          lossProfit += b.profit;
+        } else if (b.result === "cashout") {
+          cashouts++;
+          cashoutProfit += b.profit;
+        } else if (b.result === "push") {
+          pushes++;
+          pushProfit += b.profit;
+        }
+
+        const tag = b.tag && b.tag.trim() ? b.tag.trim() : "untagged";
+        if (!tagMap[tag]) {
+          tagMap[tag] = { count: 0, staked: 0, profit: 0 };
+        }
+        tagMap[tag].count += 1;
+        tagMap[tag].staked += b.stake;
+        tagMap[tag].profit += b.profit;
+      });
+
+      const tagArray = Object.keys(tagMap).map((tag) => ({
+        tag,
+        ...tagMap[tag],
+      }));
+
+      tagArray.sort((a, b) => b.staked - a.staked); // top volume
+
+      return {
+        wins,
+        losses,
+        cashouts,
+        pushes,
+        winProfit,
+        lossProfit,
+        cashoutProfit,
+        pushProfit,
+        tagArray,
+      };
     }
 
     function updateHeatMeter(pnlPct) {
@@ -678,9 +901,138 @@
       }
     }
 
+    function updateExtractionAlert() {
+      const target = state.flipTarget || 10;
+      const completed = state.flipsCompleted || 0;
+      const flipProfit = state.flipProfitTarget || 0;
+
+      const milestones = [2, 4, 6, 8, 10];
+      if (milestones.includes(completed) && flipProfit > 0) {
+        const totalTarget = completed * flipProfit;
+        alertText.textContent =
+          "Flip " +
+          completed +
+          " of " +
+          target +
+          " hit · consider skimming around " +
+          formatMoney(totalTarget) +
+          " in profits.";
+        alertBar.classList.remove("hidden");
+      } else {
+        alertBar.classList.add("hidden");
+      }
+    }
+
+    function renderJournal() {
+      const {
+        wins,
+        losses,
+        cashouts,
+        pushes,
+        winProfit,
+        lossProfit,
+        cashoutProfit,
+        pushProfit,
+        tagArray,
+      } = computeJournal();
+
+      const totalBets = state.bets.length || 0;
+      journalCountBadge.textContent = totalBets + " logged";
+
+      journalWinsDisplay.textContent = wins;
+      journalLossesDisplay.textContent = losses;
+      journalCashoutDisplay.textContent = cashouts;
+      journalPushDisplay.textContent = pushes;
+
+      journalWinsProfitDisplay.textContent = formatMoney(winProfit) + " net";
+      journalLossesProfitDisplay.textContent = formatMoney(lossProfit) + " net";
+      journalCashoutProfitDisplay.textContent = formatMoney(cashoutProfit) + " net";
+      journalPushProfitDisplay.textContent = formatMoney(pushProfit) + " net";
+
+      // Insight text
+      if (!totalBets) {
+        journalInsightText.textContent =
+          "Log a few bets and this will start reflecting your strongest & weakest zones.";
+      } else {
+        let strongest = "N/A";
+        let weakest = "N/A";
+        if (tagArray.length) {
+          const sortedByProfit = tagArray.slice().sort((a, b) => b.profit - a.profit);
+          strongest = sortedByProfit[0];
+          weakest = sortedByProfit[sortedByProfit.length - 1];
+        }
+
+        const strongestText =
+          strongest && strongest.tag
+            ? `Strongest so far: ${strongest.tag} (${formatMoney(
+                strongest.profit
+              )} net).`
+            : "";
+        const weakestText =
+          weakest && weakest.tag
+            ? `Leak to watch: ${weakest.tag} (${formatMoney(
+                weakest.profit
+              )} net).`
+            : "";
+
+        journalInsightText.textContent =
+          strongestText || weakestText
+            ? strongestText + " " + weakestText
+            : "Keep logging volume — patterns will show quickly.";
+      }
+
+      // Tag stats list
+      tagStats.innerHTML = "";
+      if (!tagArray.length) {
+        const empty = document.createElement("div");
+        empty.style.padding = "8px 10px";
+        empty.style.fontSize = "11px";
+        empty.style.color = "#6b7280";
+        empty.textContent = "No tags yet. Use the TAG field when you log bets.";
+        tagStats.appendChild(empty);
+      } else {
+        tagArray.slice(0, 8).forEach((t) => {
+          const row = document.createElement("div");
+          row.className = "tag-row";
+
+          const left = document.createElement("div");
+          left.className = "tag-label";
+          left.textContent = t.tag;
+
+          const right = document.createElement("div");
+          right.style.textAlign = "right";
+
+          const meta1 = document.createElement("div");
+          meta1.className = "tag-meta";
+          meta1.textContent =
+            t.count + " bets · " + formatMoney(t.staked) + " staked";
+
+          const meta2 = document.createElement("div");
+          meta2.className = "tag-meta";
+          meta2.textContent = "Net: " + formatMoney(t.profit);
+
+          right.appendChild(meta1);
+          right.appendChild(meta2);
+
+          row.appendChild(left);
+          row.appendChild(right);
+          tagStats.appendChild(row);
+        });
+      }
+    }
+
     function render() {
       // Stats
-      const { staked, returned, pnl, pnlPct, hitRate, pnlPerBet } = computeStats();
+      const {
+        staked,
+        returned,
+        pnl,
+        pnlPct,
+        hitRate,
+        pnlPerBet,
+        avgStake,
+        returnMultiple,
+      } = computeStats();
       const currentBalance = (state.startingBankroll || 0) + pnl;
       const riskPerBet =
         state.startingBankroll && state.riskPct
@@ -705,10 +1057,15 @@
       hitRateDisplay.textContent = hitRate.toFixed(1) + "% hit rate";
       volumeDisplay.textContent =
         formatMoney(staked) + " staked · " + formatMoney(returned) + " returned";
+
+      returnMultipleDisplay.textContent = returnMultiple.toFixed(2) + "x";
+      avgStakeDisplay.textContent = formatMoney(avgStake);
+
       betsSummaryBadge.textContent =
-        (state.bets.length || 0) + " bets · " + state.sessionTag;
+        (state.bets.length || 0) + " bets · " + (state.sessionTag || "no tag");
 
       updateHeatMeter(pnlPct);
+      updateExtractionAlert();
 
       // flips
       const target = state.flipTarget || 10;
@@ -789,6 +1146,9 @@
             betLog.appendChild(row);
           });
       }
+
+      // Journal
+      renderJournal();
     }
 
     // Handlers
@@ -879,6 +1239,21 @@
       state.bets = [];
       saveState();
       render();
+    });
+
+    // Tabs
+    tabDashboardBtn.addEventListener("click", () => {
+      tabDashboardBtn.classList.add("tab-btn-active");
+      tabJournalBtn.classList.remove("tab-btn-active");
+      dashboardView.classList.remove("hidden");
+      journalView.classList.add("hidden");
+    });
+
+    tabJournalBtn.addEventListener("click", () => {
+      tabJournalBtn.classList.add("tab-btn-active");
+      tabDashboardBtn.classList.remove("tab-btn-active");
+      dashboardView.classList.add("hidden");
+      journalView.classList.remove("hidden");
     });
 
     // Init
