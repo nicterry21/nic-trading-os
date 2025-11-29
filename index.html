@@ -573,6 +573,39 @@
       margin-top: 0.3rem;
     }
 
+    /* Journal */
+
+    .journal-textarea {
+      width: 100%;
+      min-height: 90px;
+      padding: 0.5rem 0.6rem;
+      border-radius: 12px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      color: #e5e7eb;
+      resize: vertical;
+      font-size: 0.85rem;
+    }
+
+    /* Cashouts */
+
+    .cashout-summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.4rem;
+      font-size: 0.8rem;
+      color: #e5e7eb;
+    }
+
+    .cashout-summary span.label {
+      color: #9ca3af;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-right: 0.25rem;
+    }
+
     /* Mobile tweaks */
     @media (max-width: 768px) {
       .app {
@@ -752,6 +785,74 @@
         <p class="subtext">Live scan of your behavior today.</p>
         <ul id="trapList" class="alert-list"></ul>
         <p id="noTrapsMsg" class="subtext muted"></p>
+      </section>
+
+      <!-- JOURNAL -->
+      <section class="card">
+        <h2>🧾 Journal & Notes</h2>
+        <p class="subtext">
+          Capture what you were thinking before, during, or after the slate. This is how you coach the future you.
+        </p>
+        <textarea id="journalText" class="journal-textarea" placeholder="Today I noticed..."></textarea>
+        <div class="form-actions">
+          <button id="saveJournalBtn" class="btn btn-secondary btn-sm">Save Journal Entry</button>
+        </div>
+        <p class="subtext muted">Recent entries:</p>
+        <ul id="journalList" class="alert-list"></ul>
+      </section>
+
+      <!-- CASHOUTS -->
+      <section class="card scroll-card">
+        <h2>💵 Bankroll Cashouts</h2>
+        <p class="subtext">
+          Record money leaving or entering the bankroll so your numbers stay honest. Cashouts adjust your
+          current bankroll but do not count as betting losses.
+        </p>
+
+        <div class="form-grid">
+          <div class="form-item">
+            <label>Amount</label>
+            <input type="number" id="cashAmount" placeholder="e.g. 250" />
+          </div>
+          <div class="form-item">
+            <label>Reason / Note</label>
+            <input type="text" id="cashReason" placeholder="Pulled profit, paid bill, deposit, etc." />
+          </div>
+        </div>
+        <div class="form-actions">
+          <button id="recordCashoutBtn" class="btn btn-primary btn-sm">Record Cashout (Funds Out)</button>
+          <button id="recordDepositBtn" class="btn btn-secondary btn-sm">Record Deposit (Funds In)</button>
+        </div>
+
+        <div class="cashout-summary">
+          <div>
+            <span class="label">Total Cashouts:</span>
+            <span id="totalCashoutsDisplay">$0.00</span>
+          </div>
+          <div>
+            <span class="label">Total Deposits:</span>
+            <span id="totalDepositsDisplay">$0.00</span>
+          </div>
+          <div>
+            <span class="label">Net Adjustments:</span>
+            <span id="netAdjustmentsDisplay">$0.00</span>
+          </div>
+        </div>
+
+        <div class="table-wrapper" style="margin-top:0.75rem;">
+          <table id="cashoutTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Reason</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </section>
 
       <!-- BET ENTRY FORM -->
@@ -1034,6 +1135,9 @@
       history: [] // {flip, start, target, result, status}
     };
 
+    let cashouts = [];       // {id,date,time,type,amount,reason}
+    let journalEntries = []; // {id,datetime,sessionId,text}
+
     let editingBetId = null;
     let lastHeatLevel = 0;
     let lastTrapKeys = [];
@@ -1051,21 +1155,29 @@
       const storedBets = localStorage.getItem("at_bets");
       const storedSettings = localStorage.getItem("at_settings");
       const storedFlip = localStorage.getItem("at_flip");
+      const storedCashouts = localStorage.getItem("at_cashouts");
+      const storedJournal = localStorage.getItem("at_journal");
+
       if (storedBets) bets = JSON.parse(storedBets);
       if (storedSettings) settings = JSON.parse(storedSettings);
       if (storedFlip) flipState = JSON.parse(storedFlip);
+      if (storedCashouts) cashouts = JSON.parse(storedCashouts);
+      if (storedJournal) journalEntries = JSON.parse(storedJournal);
     }
 
     function saveState() {
       localStorage.setItem("at_bets", JSON.stringify(bets));
       localStorage.setItem("at_settings", JSON.stringify(settings));
       localStorage.setItem("at_flip", JSON.stringify(flipState));
+      localStorage.setItem("at_cashouts", JSON.stringify(cashouts));
+      localStorage.setItem("at_journal", JSON.stringify(journalEntries));
     }
 
     function pushUndoSnapshot() {
       undoStack.push({
         bets: JSON.parse(JSON.stringify(bets)),
-        settings: JSON.parse(JSON.stringify(settings))
+        settings: JSON.parse(JSON.stringify(settings)),
+        cashouts: JSON.parse(JSON.stringify(cashouts))
       });
       if (undoStack.length > 20) undoStack.shift();
     }
@@ -1073,6 +1185,10 @@
     // ====== HELPERS ======
     function generateBetId() {
       return bets.length ? Math.max(...bets.map(b => b.id)) + 1 : 1;
+    }
+
+    function generateSimpleId(arr) {
+      return arr.length ? Math.max(...arr.map(x => x.id || 0)) + 1 : 1;
     }
 
     function todayString() {
@@ -1190,6 +1306,21 @@
     const contractCheckbox = document.getElementById("contractAcceptCheckbox");
     const contractCancelBtn = document.getElementById("contractCancelBtn");
     const contractStartBtn = document.getElementById("contractStartBtn");
+
+    // journal
+    const journalText = document.getElementById("journalText");
+    const saveJournalBtn = document.getElementById("saveJournalBtn");
+    const journalList = document.getElementById("journalList");
+
+    // cashouts
+    const cashAmountInput = document.getElementById("cashAmount");
+    const cashReasonInput = document.getElementById("cashReason");
+    const recordCashoutBtn = document.getElementById("recordCashoutBtn");
+    const recordDepositBtn = document.getElementById("recordDepositBtn");
+    const cashoutTableBody = document.querySelector("#cashoutTable tbody");
+    const totalCashoutsDisplay = document.getElementById("totalCashoutsDisplay");
+    const totalDepositsDisplay = document.getElementById("totalDepositsDisplay");
+    const netAdjustmentsDisplay = document.getElementById("netAdjustmentsDisplay");
 
     // 10 flip refs
     const flipStartBankrollInput = document.getElementById("flipStartBankroll");
@@ -1503,7 +1634,6 @@
       }).length;
       const ruleBreaks = countRuleBreaksToday();
 
-      // recent consecutive losses
       const sorted = activeToday.slice().sort((a, b) => a.id - b.id);
       let streak = 0;
       for (let i = sorted.length - 1; i >= 0; i--) {
@@ -1576,7 +1706,7 @@
       let aggWins = 0, aggTotal = 0;
       let safeWins = 0, safeTotal = 0;
 
-      const marketStats = {}; // market -> {net, count}
+      const marketStats = {};
       const timeBuckets = { morning: { w:0,l:0 }, afternoon: { w:0,l:0 }, night:{ w:0,l:0 } };
 
       for (const b of last30) {
@@ -1604,11 +1734,9 @@
         if (b.result === "Loss") timeBuckets[bucket].l++;
       }
 
-      // winrates
       if (aggTotal > 0) summary.aggressiveWinRate = (aggWins / aggTotal) * 100;
       if (safeTotal > 0) summary.safeWinRate = (safeWins / safeTotal) * 100;
 
-      // markets best/worst by net
       const markets = Object.entries(marketStats);
       if (markets.length) {
         markets.sort((a, b) => b[1].net - a[1].net);
@@ -1616,7 +1744,6 @@
         summary.worstMarket = markets[markets.length - 1][0];
       }
 
-      // generate notes
       if (summary.aggressiveWinRate !== null) {
         summary.notes.push(
           `Aggressive plays are ${summary.aggressiveWinRate.toFixed(1)}% over your last 30.`
@@ -1763,6 +1890,121 @@
 
     function closeReplayModal() {
       replayModal.classList.remove("active");
+    }
+
+    // ====== JOURNAL ======
+    function renderJournal() {
+      journalList.innerHTML = "";
+      if (!journalEntries.length) {
+        const li = document.createElement("li");
+        li.textContent = "No journal entries yet. Capture what you learned after each slate.";
+        journalList.appendChild(li);
+        return;
+      }
+      const sorted = journalEntries
+        .slice()
+        .sort((a, b) => new Date(b.datetime) - new Date(a.datetime))
+        .slice(0, 10);
+
+      for (const entry of sorted) {
+        const dt = new Date(entry.datetime);
+        const dateStr = dt.toLocaleDateString();
+        const timeStr = dt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        const li = document.createElement("li");
+        li.textContent = `${dateStr} ${timeStr} – ${entry.text}`;
+        journalList.appendChild(li);
+      }
+    }
+
+    function saveJournalEntry() {
+      const text = (journalText.value || "").trim();
+      if (!text) return;
+      const entry = {
+        id: generateSimpleId(journalEntries),
+        datetime: new Date().toISOString(),
+        sessionId: settings.sessionId || null,
+        text
+      };
+      journalEntries.push(entry);
+      journalText.value = "";
+      saveState();
+      renderJournal();
+    }
+
+    // ====== CASHOUTS ======
+    function renderCashouts() {
+      cashoutTableBody.innerHTML = "";
+      let totalOut = 0;
+      let totalIn = 0;
+
+      const sorted = cashouts
+        .slice()
+        .sort((a, b) => new Date(b.date + " " + b.time) - new Date(a.date + " " + a.time))
+        .slice(0, 50); // latest 50
+
+      for (const c of sorted) {
+        if (c.type === "cashout") totalOut += c.amount;
+        if (c.type === "deposit") totalIn += c.amount;
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${c.date}</td>
+          <td>${c.time}</td>
+          <td>${c.type === "cashout" ? "Cashout" : "Deposit"}</td>
+          <td>${(c.type === "cashout" ? "-" : "+") + c.amount.toFixed(2)}</td>
+          <td>${c.reason || ""}</td>
+        `;
+        cashoutTableBody.appendChild(tr);
+      }
+
+      totalCashoutsDisplay.textContent = "$" + totalOut.toFixed(2);
+      totalDepositsDisplay.textContent = "$" + totalIn.toFixed(2);
+      const net = totalIn - totalOut;
+      const sign = net >= 0 ? "+" : "-";
+      netAdjustmentsDisplay.textContent = `${sign}$${Math.abs(net).toFixed(2)}`;
+    }
+
+    function recordCashEvent(type) {
+      const rawAmount = Number(cashAmountInput.value);
+      if (!rawAmount || rawAmount <= 0) {
+        alert("Enter a positive amount.");
+        return;
+      }
+      const reason = (cashReasonInput.value || "").trim();
+      const date = todayString();
+      const now = new Date();
+      const time = now.toTimeString().slice(0, 5);
+
+      pushUndoSnapshot();
+
+      const event = {
+        id: generateSimpleId(cashouts),
+        date,
+        time,
+        type, // "cashout" or "deposit"
+        amount: rawAmount,
+        reason
+      };
+      cashouts.push(event);
+
+      // adjust bankroll
+      const current = Number(settings.bankroll || 0);
+      const delta = type === "cashout" ? -rawAmount : rawAmount;
+      settings.bankroll = current + delta;
+      currentBankrollInput.value = settings.bankroll;
+
+      cashAmountInput.value = "";
+      cashReasonInput.value = "";
+
+      saveState();
+      renderCashouts();
+      renderDashboard();
+
+      if (type === "cashout") {
+        speak("Cashout recorded. You pulled profit out of the system.");
+      } else {
+        speak("Deposit recorded. Bankroll updated.");
+      }
     }
 
     // ====== DASHBOARD ======
@@ -2051,10 +2293,12 @@
       }
       bets = snapshot.bets;
       settings = snapshot.settings;
+      cashouts = snapshot.cashouts || cashouts;
       saveState();
       renderBetsTable();
       renderDashboard();
       renderFlipModule();
+      renderCashouts();
     }
 
     // ====== 10 FLIP MODULE ======
@@ -2197,7 +2441,6 @@
         return;
       }
 
-      // smart stake hard stop
       const heat = Number(heatLevelSpan.textContent || 0);
       const disciplineScore = Number(disciplineScoreSpan.textContent || 100);
       const rec = computeSmartStakeRecommendation(heat, disciplineScore);
@@ -2356,6 +2599,11 @@
       startNewSession();
     });
 
+    saveJournalBtn.addEventListener("click", saveJournalEntry);
+
+    recordCashoutBtn.addEventListener("click", () => recordCashEvent("cashout"));
+    recordDepositBtn.addEventListener("click", () => recordCashEvent("deposit"));
+
     // ====== INIT ======
     function init() {
       loadState();
@@ -2364,8 +2612,9 @@
       renderBetsTable();
       renderDashboard();
       renderFlipModule();
+      renderJournal();
+      renderCashouts();
 
-      // optional PWA
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register("sw.js").catch(() => {});
       }
