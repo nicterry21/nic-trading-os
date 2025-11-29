@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>A-T Trading Console – Phase 3</title>
+  <title>A-T Trading Console – Stable Build</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#050810" />
-  <link rel="manifest" href="manifest.json" />
 
   <style>
     * {
@@ -27,47 +26,37 @@
     .app {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 1.5rem;
-    }
-
-    .app-header {
-      text-align: left;
-      margin-bottom: 0.75rem;
+      padding: 1.25rem;
     }
 
     .app-header h1 {
       margin: 0;
-      font-size: 1.9rem;
+      font-size: 1.8rem;
     }
 
     .app-header p {
-      margin: 0.3rem 0 0;
+      margin: 0.25rem 0 0;
       color: #9ca3af;
+      font-size: 0.9rem;
     }
 
-    .app-header .subtext {
-      margin-top: 0.25rem;
-    }
-
-    /* Top nav (pages) */
     .top-nav {
       display: flex;
       gap: 0.5rem;
-      margin-bottom: 1rem;
+      margin: 1rem 0 0.75rem;
       border-bottom: 1px solid #111827;
       padding-bottom: 0.25rem;
       position: sticky;
       top: 0;
-      z-index: 40;
-      background: linear-gradient(180deg, #020617 0%, #050810 100%);
-      padding-top: 0.25rem;
+      background: #020617;
+      z-index: 20;
     }
 
     .nav-tab {
       border: none;
       background: transparent;
       color: #9ca3af;
-      padding: 0.4rem 0.8rem;
+      padding: 0.4rem 0.9rem;
       border-radius: 999px;
       cursor: pointer;
       font-size: 0.85rem;
@@ -78,53 +67,32 @@
       color: #fff;
     }
 
-    .nav-tab:hover {
-      background: #111827;
-    }
-
-    /* Cards */
     .card {
-      background: rgba(15, 23, 42, 0.92);
+      background: rgba(15, 23, 42, 0.96);
       border-radius: 18px;
-      padding: 1.15rem 1.25rem;
-      margin-bottom: 1.1rem;
-      border: 1px solid rgba(148, 163, 184, 0.2);
+      padding: 1rem 1.1rem;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(148, 163, 184, 0.25);
       box-shadow:
-        0 18px 40px rgba(0, 0, 0, 0.7),
+        0 16px 30px rgba(0, 0, 0, 0.7),
         0 0 0 1px rgba(15, 23, 42, 0.9);
       backdrop-filter: blur(10px);
     }
 
     .card h2 {
-      margin-top: 0;
-      margin-bottom: 0.75rem;
+      margin: 0 0 0.6rem;
       font-size: 1.2rem;
     }
 
-    .card-header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
     .subtext {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: #9ca3af;
-      margin-top: 0;
-      margin-bottom: 0.5rem;
+      margin: 0.15rem 0 0.4rem;
     }
 
-    .subtext.muted {
-      opacity: 0.7;
-    }
-
-    /* Views */
     .view {
       display: none;
     }
-
     .view.active {
       display: block;
     }
@@ -132,20 +100,19 @@
     /* Dashboard */
     .dashboard-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 0.75rem;
-      margin-bottom: 0.75rem;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 0.6rem;
+      margin-top: 0.3rem;
     }
 
     .dash-item {
       background: #020617;
       border-radius: 12px;
-      padding: 0.6rem 0.75rem;
+      padding: 0.5rem 0.6rem;
       border: 1px solid #111827;
     }
 
-    .dash-item label,
-    .dash-item .label {
+    .dash-label {
       display: block;
       font-size: 0.7rem;
       text-transform: uppercase;
@@ -161,85 +128,40 @@
       border: 1px solid #1f2937;
       background: #020617;
       color: #e5e7eb;
+      font-size: 0.8rem;
     }
 
-    .dash-item .value {
+    .dash-value {
       font-size: 1rem;
       font-weight: 600;
     }
 
-    .dash-item .heat {
-      font-size: 1.2rem;
-    }
+    .heat-low { color: #22c55e; }
+    .heat-medium { color: #facc15; }
+    .heat-high { color: #fb7185; }
 
-    .dashboard-actions {
-      margin-top: 0.4rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-    }
-
-    /* Buttons */
     .btn {
       border: none;
       border-radius: 999px;
-      padding: 0.45rem 0.9rem;
+      padding: 0.4rem 0.9rem;
       cursor: pointer;
       font-size: 0.85rem;
       background: #111827;
       color: #e5e7eb;
-      transition: background 0.18s, transform 0.1s;
+      transition: background 0.15s, transform 0.08s;
       white-space: nowrap;
     }
+    .btn-primary { background: #16a34a; color: #fff; }
+    .btn-danger { background: #b91c1c; color: #fff; }
+    .btn-sm { padding: 0.25rem 0.6rem; font-size: 0.75rem; }
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
+    .btn:active { transform: translateY(0); filter: brightness(0.95); }
 
-    .btn-primary {
-      background: #16a34a;
-      color: #fff;
-    }
-
-    .btn-secondary {
-      background: #374151;
-    }
-
-    .btn-danger {
-      background: #b91c1c;
-    }
-
-    .btn-sm {
-      padding: 0.25rem 0.6rem;
-      font-size: 0.75rem;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.05);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-      filter: brightness(0.95);
-    }
-
-    .btn[disabled] {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-      filter: none;
-    }
-
-    /* Audio */
-    .audio-controls {
+    .actions-row {
       display: flex;
-      align-items: center;
       gap: 0.5rem;
-      font-size: 0.8rem;
       flex-wrap: wrap;
-    }
-
-    .audio-controls label {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
+      margin-top: 0.5rem;
     }
 
     /* Form */
@@ -264,10 +186,11 @@
       border: 1px solid #1f2937;
       background: #020617;
       color: #e5e7eb;
+      font-size: 0.8rem;
     }
 
     .form-actions {
-      margin-top: 0.9rem;
+      margin-top: 0.85rem;
       display: flex;
       gap: 0.5rem;
       flex-wrap: wrap;
@@ -276,61 +199,92 @@
     .unit-buttons {
       margin-top: 0.3rem;
       display: flex;
-      gap: 0.3rem;
+      gap: 0.35rem;
       flex-wrap: wrap;
-      font-size: 0.75rem;
-    }
-
-    .unit-buttons .btn {
-      padding: 0.25rem 0.6rem;
-      font-size: 0.75rem;
     }
 
     .smart-stake-text {
       font-size: 0.75rem;
       color: #a5b4fc;
-      margin-top: 0.3rem;
+      margin-top: 0.25rem;
     }
 
-    /* Emotion slider */
-    .emotion-slider-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
+    .table-wrapper {
+      overflow-x: auto;
+      margin-top: 0.4rem;
     }
 
-    .emotion-labels {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.7rem;
-      color: #9ca3af;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
     }
 
-    /* Playbook & Combos */
-    .playbook-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1rem;
+    th, td {
+      padding: 0.4rem 0.4rem;
+      text-align: left;
     }
 
-    .playbook-block {
+    thead {
       background: #020617;
-      border-radius: 12px;
-      padding: 0.75rem 0.9rem;
-      border: 1px solid #111827;
     }
 
-    .list {
-      margin: 0.3rem 0 0;
-      padding-left: 1.2rem;
+    tbody tr:nth-child(even) { background: #030712; }
+    tbody tr:nth-child(odd) { background: #020617; }
+
+    .result-win { color: #4ade80; }
+    .result-loss { color: #f97373; }
+    .result-pending { color: #facc15; }
+
+    .status-pill {
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+    }
+    .status-active { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+    .status-void { background: rgba(248, 113, 113, 0.15); color: #fb7185; }
+
+    .scroll-card {
+      max-height: 65vh;
+      overflow-y: auto;
+    }
+
+    /* Flip + Journal */
+    .flip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.7rem;
+    }
+
+    .flip-item label {
+      display: block;
+      font-size: 0.75rem;
+      color: #9ca3af;
+      margin-bottom: 0.25rem;
+    }
+    .flip-item input {
+      width: 100%;
+      padding: 0.35rem 0.45rem;
+      border-radius: 8px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      color: #e5e7eb;
       font-size: 0.8rem;
     }
 
-    .list li {
-      margin-bottom: 0.25rem;
+    .journal-textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 0.6rem 0.7rem;
+      border-radius: 12px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      color: #e5e7eb;
+      resize: vertical;
+      font-size: 0.85rem;
     }
 
-    /* Alerts */
     .alert-list {
       list-style: none;
       padding-left: 0;
@@ -346,280 +300,10 @@
       border: 1px solid #111827;
     }
 
-    /* Table */
-    .table-wrapper {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.8rem;
-    }
-
-    th,
-    td {
-      padding: 0.5rem 0.4rem;
-      text-align: left;
-    }
-
-    thead {
-      background: #020617;
-    }
-
-    tbody tr:nth-child(even) {
-      background: #030712;
-    }
-
-    tbody tr:nth-child(odd) {
-      background: #020617;
-    }
-
-    .status-pill {
-      padding: 0.2rem 0.5rem;
-      border-radius: 999px;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-    }
-
-    .status-active {
-      background: rgba(34, 197, 94, 0.15);
-      color: #4ade80;
-    }
-
-    .status-void {
-      background: rgba(248, 113, 113, 0.15);
-      color: #fb7185;
-    }
-
-    .result-win {
-      color: #4ade80;
-    }
-
-    .result-loss {
-      color: #f97373;
-    }
-
-    .result-push {
-      color: #e5e7eb;
-    }
-
-    .result-pending {
-      color: #facc15;
-    }
-
-    /* Heat colors */
-    .heat-low {
-      color: #22c55e;
-    }
-
-    .heat-medium {
-      color: #facc15;
-    }
-
-    .heat-high {
-      color: #fb7185;
-    }
-
-    /* Scroll cards */
-    .scroll-card {
-      max-height: 65vh;
-      overflow-y: auto;
-    }
-
-    .bets-log-controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .bets-log-controls select {
-      padding: 0.3rem 0.5rem;
-      border-radius: 999px;
-      border: 1px solid #1f2937;
-      background: #020617;
-      color: #e5e7eb;
-      font-size: 0.8rem;
-    }
-
-    .bets-log-buttons {
-      display: flex;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-    }
-
-    /* 10 Flip */
-    .flip-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 0.75rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .flip-item {
-      background: #020617;
-      border-radius: 12px;
-      padding: 0.6rem 0.75rem;
-      border: 1px solid #111827;
-    }
-
-    .flip-item label {
-      display: block;
-      font-size: 0.75rem;
-      color: #9ca3af;
-      margin-bottom: 0.25rem;
-    }
-
-    .flip-item input {
-      width: 100%;
-      padding: 0.35rem 0.45rem;
-      border-radius: 8px;
-      border: 1px solid #1f2937;
-      background: #020617;
-      color: #e5e7eb;
-    }
-
-    .flip-meta {
-      font-size: 0.8rem;
-      margin-bottom: 0.5rem;
-      color: #e5e7eb;
-    }
-
-    .flip-meta span {
-      display: block;
-      margin-bottom: 0.15rem;
-    }
-
-    /* Modal */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.88);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      padding: 1rem;
-    }
-
-    .modal-overlay.active {
-      display: flex;
-    }
-
-    .modal {
-      background: #020617;
-      border-radius: 16px;
-      padding: 1.1rem 1.2rem;
-      border: 1px solid #1f2937;
-      max-width: 480px;
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    .modal h3 {
-      margin-top: 0;
-      margin-bottom: 0.5rem;
-    }
-
-    .modal ul {
-      padding-left: 1.2rem;
-      font-size: 0.85rem;
-    }
-
-    .modal-footer {
-      margin-top: 0.75rem;
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .session-label-input {
-      width: 100%;
-      padding: 0.4rem 0.5rem;
-      border-radius: 8px;
-      border: 1px solid #1f2937;
-      background: #020617;
-      color: #e5e7eb;
-      margin-top: 0.3rem;
-      font-size: 0.85rem;
-    }
-
-    .opponent-note {
-      font-size: 0.75rem;
-      color: #fbbf24;
-      margin-top: 0.3rem;
-    }
-
-    /* Journal */
-    .journal-textarea {
-      width: 100%;
-      min-height: 120px;
-      padding: 0.6rem 0.7rem;
-      border-radius: 12px;
-      border: 1px solid #1f2937;
-      background: #020617;
-      color: #e5e7eb;
-      resize: vertical;
-      font-size: 0.85rem;
-    }
-
-    /* Cashouts */
-    .cashout-summary {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 0.4rem;
-      font-size: 0.8rem;
-      color: #e5e7eb;
-    }
-
-    .cashout-summary span.label {
-      color: #9ca3af;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-right: 0.25rem;
-    }
-
-    /* Mobile tweaks */
     @media (max-width: 768px) {
-      .app {
-        padding: 0.75rem;
-      }
-
-      .app-header h1 {
-        font-size: 1.4rem;
-      }
-
-      .card {
-        padding: 0.9rem 0.9rem;
-        border-radius: 16px;
-      }
-
-      .dashboard-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0.5rem;
-      }
-
-      .dash-item {
-        padding: 0.5rem 0.55rem;
-      }
-
-      .bets-log-controls {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      table th,
-      table td {
-        padding: 0.35rem 0.3rem;
-        font-size: 0.75rem;
-      }
+      .app { padding: 0.8rem; }
+      .card { padding: 0.9rem; }
+      .dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
   </style>
 </head>
@@ -627,116 +311,71 @@
   <div class="app">
     <header class="app-header">
       <h1>A-T Trading Console</h1>
-      <p>Real-time bankroll, heat, traps, and controlled outputs.</p>
-      <p class="subtext">
-        Built for former gamblers turned traders who want data, not dopamine.
-      </p>
+      <p>Real-time bankroll, units, and disciplined logging.</p>
     </header>
 
-    <!-- Top Nav / Pages -->
+    <!-- NAV -->
     <nav class="top-nav">
-      <button class="nav-tab active" data-target="console">Console</button>
-      <button class="nav-tab" data-target="flip">10 Flip Challenge</button>
-      <button class="nav-tab" data-target="journal">Journal</button>
+      <button class="nav-tab active" data-view="console">Console</button>
+      <button class="nav-tab" data-view="flip">10 Flip</button>
+      <button class="nav-tab" data-view="journal">Journal</button>
     </nav>
 
-    <!-- VIEW: CONSOLE -->
-    <div class="view active" data-view="console">
+    <!-- CONSOLE VIEW -->
+    <div class="view active" id="view-console">
       <!-- DASHBOARD -->
       <section class="card">
-        <div class="card-header-row">
-          <h2>📊 Dashboard</h2>
-          <div class="audio-controls">
-            <label>
-              <input type="checkbox" id="audioToggle" />
-              Lock-In Voice
-            </label>
-            <button id="speakRecapBtn" class="btn btn-secondary btn-sm">
-              Speak Session Recap
-            </button>
-            <button id="sessionReplayBtn" class="btn btn-secondary btn-sm">
-              Run Session Replay
-            </button>
-          </div>
-        </div>
-
+        <h2>📊 Dashboard</h2>
+        <p class="subtext">Set bankroll, unit size, daily goal, and loss limit.</p>
         <div class="dashboard-grid">
           <div class="dash-item">
-            <label>Current Bankroll</label>
-            <input type="number" id="currentBankroll" />
+            <span class="dash-label">Current Bankroll</span>
+            <input type="number" id="bankrollInput" step="0.01" />
           </div>
           <div class="dash-item">
-            <label>Starting Bankroll (Session)</label>
-            <input type="number" id="sessionBankroll" />
+            <span class="dash-label">Unit Size (1U)</span>
+            <input type="number" id="unitInput" step="0.01" />
           </div>
           <div class="dash-item">
-            <label>Unit Size (1U)</label>
-            <input type="number" id="unitSize" placeholder="Auto or manual" />
+            <span class="dash-label">Daily Target (+$)</span>
+            <input type="number" id="targetInput" step="0.01" />
           </div>
           <div class="dash-item">
-            <label>Daily Target (+$)</label>
-            <input type="number" id="dailyTarget" />
+            <span class="dash-label">Max Loss (-$)</span>
+            <input type="number" id="maxLossInput" step="0.01" />
           </div>
           <div class="dash-item">
-            <label>Max Loss (-$)</label>
-            <input type="number" id="maxLoss" />
+            <span class="dash-label">Daily P/L</span>
+            <div class="dash-value" id="dailyPL"></div>
           </div>
           <div class="dash-item">
-            <span class="label">Daily P/L</span>
-            <span id="dailyPL" class="value"></span>
+            <span class="dash-label">Total P/L</span>
+            <div class="dash-value" id="totalPL"></div>
           </div>
           <div class="dash-item">
-            <span class="label">Total P/L</span>
-            <span id="totalPL" class="value"></span>
+            <span class="dash-label">Win Rate</span>
+            <div class="dash-value" id="winRate"></div>
           </div>
           <div class="dash-item">
-            <span class="label">Win Rate (All-Time)</span>
-            <span id="winRate" class="value"></span>
+            <span class="dash-label">Bets Today</span>
+            <div class="dash-value" id="betsToday"></div>
           </div>
           <div class="dash-item">
-            <span class="label">Bets Today</span>
-            <span id="betsToday" class="value"></span>
-          </div>
-          <div class="dash-item">
-            <span class="label">Heat Level</span>
-            <span id="heatLevel" class="value heat"></span>
-          </div>
-          <div class="dash-item">
-            <span class="label">Discipline Score</span>
-            <span id="disciplineScore" class="value"></span>
-          </div>
-          <div class="dash-item">
-            <span class="label">Rules Broken Today</span>
-            <span id="rulesBrokenToday" class="value"></span>
-          </div>
-          <div class="dash-item">
-            <span class="label">Session Label</span>
-            <span id="sessionLabelDisplay" class="value"></span>
-          </div>
-          <div class="dash-item">
-            <span class="label">Session ID</span>
-            <span id="sessionId" class="value"></span>
-          </div>
-          <div class="dash-item">
-            <span class="label">Session P/L</span>
-            <span id="sessionPL" class="value"></span>
-          </div>
-          <div class="dash-item">
-            <span class="label">Session Bets</span>
-            <span id="sessionBets" class="value"></span>
+            <span class="dash-label">Heat</span>
+            <div class="dash-value" id="heatLevel"></div>
           </div>
         </div>
-
-        <div class="dashboard-actions">
-          <button id="startSessionBtn" class="btn btn-primary">Start New Session</button>
-          <button id="saveBankrollBtn" class="btn">Save Bankroll & Goals</button>
+        <div class="actions-row">
+          <button class="btn btn-primary" id="saveSettingsBtn">Save Settings</button>
+          <button class="btn btn-sm" id="resetTodayBtn">Reset Today (not full history)</button>
         </div>
-        <p id="sessionStatusText" class="subtext muted"></p>
       </section>
 
       <!-- LOG A PLAY (directly after dashboard) -->
       <section class="card">
         <h2 id="formTitle">Log a Play</h2>
+        <p class="subtext">Enter plays with decimals (e.g. 54.61 stake) and tag risk.</p>
+
         <form id="betForm" novalidate>
           <div class="form-grid">
             <div class="form-item">
@@ -753,25 +392,38 @@
             </div>
             <div class="form-item">
               <label>Market</label>
-              <input type="text" id="betMarket" placeholder="Spread, Total, PRA..." />
+              <input type="text" id="betMarket" placeholder="Spread, PRA, ML..." />
             </div>
             <div class="form-item">
               <label>Description</label>
-              <input type="text" id="betDescription" placeholder="Lakers -3.5, Tatum o27.5..." />
+              <input type="text" id="betDesc" placeholder="UNC Wilmington -6.5..." />
             </div>
             <div class="form-item">
               <label>Odds (American)</label>
-              <input type="number" id="betOdds" step="0.01" required />
+              <input
+                type="number"
+                id="betOdds"
+                step="0.01"
+                inputmode="decimal"
+                required
+              />
             </div>
             <div class="form-item">
               <label>Stake</label>
-              <input type="number" id="betStake" step="0.01" min="0" required />
+              <input
+                type="number"
+                id="betStake"
+                step="0.01"
+                inputmode="decimal"
+                min="0"
+                required
+              />
               <div class="unit-buttons">
-                <button type="button" class="btn btn-secondary btn-sm unit-btn" data-mult="0.5">0.5U</button>
-                <button type="button" class="btn btn-secondary btn-sm unit-btn" data-mult="1">1U</button>
-                <button type="button" class="btn btn-secondary btn-sm unit-btn" data-mult="2">2U</button>
+                <button type="button" class="btn btn-sm" data-unit="0.5">0.5U</button>
+                <button type="button" class="btn btn-sm" data-unit="1">1U</button>
+                <button type="button" class="btn btn-sm" data-unit="2">2U</button>
               </div>
-              <div id="smartStakeText" class="smart-stake-text"></div>
+              <div class="smart-stake-text" id="stakeHint"></div>
             </div>
             <div class="form-item">
               <label>Result</label>
@@ -784,7 +436,7 @@
             </div>
             <div class="form-item">
               <label>Risk Tag</label>
-              <select id="betRiskTag">
+              <select id="betRisk">
                 <option value="Safe">Safe</option>
                 <option value="Standard" selected>Standard</option>
                 <option value="Aggressive">Aggressive</option>
@@ -792,149 +444,34 @@
             </div>
             <div class="form-item">
               <label>Confidence (1-5)</label>
-              <input type="number" id="betConfidence" min="1" max="5" value="3" />
-            </div>
-            <div class="form-item emotion-slider-wrap">
-              <label>Emotion Level</label>
-              <input type="range" id="emotionLevel" min="1" max="4" value="2" />
-              <div class="emotion-labels">
-                <span>Calm</span>
-                <span>Locked-In</span>
-                <span>Anxious</span>
-                <span>Tilted</span>
-              </div>
+              <input type="number" id="betConf" min="1" max="5" value="3" />
             </div>
             <div class="form-item">
-              <label>Emotion Tag (optional words)</label>
-              <input type="text" id="betEmotion" placeholder="Calm, Tilted, Locked-in..." />
-            </div>
-            <div class="form-item">
-              <label>Mode</label>
-              <select id="modeSelect">
-                <option value="standard">Standard</option>
-                <option value="fade">Fade Mode</option>
-                <option value="green">Green Zone</option>
-              </select>
-              <div id="opponentAdvice" class="opponent-note"></div>
+              <label>Emotion Tag (optional)</label>
+              <input type="text" id="betEmotion" placeholder="Calm, Locked-in, Tilted..." />
             </div>
           </div>
+
           <div class="form-actions">
-            <button type="submit" class="btn btn-primary" id="submitBetBtn">Save Play</button>
-            <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display:none;">Cancel Edit</button>
+            <button type="submit" class="btn btn-primary" id="savePlayBtn">
+              Save Play
+            </button>
+            <button type="button" class="btn btn-sm" id="cancelEditBtn" style="display:none;">
+              Cancel Edit
+            </button>
           </div>
         </form>
       </section>
 
-      <!-- PLAYBOOK & COMBOS -->
-      <section class="card">
-        <h2>🎯 Controlled Outputs (Phase 3)</h2>
-        <div class="playbook-grid">
-          <div class="playbook-block">
-            <h3>3-Bet Controlled Playbook</h3>
-            <p class="subtext">Top 3 pending plays ranked by edge & discipline.</p>
-            <ol id="playbook3List" class="list"></ol>
-          </div>
-          <div class="playbook-block">
-            <h3>2-Leg Combos</h3>
-            <p class="subtext">Best 2-leg combinations from your pending pool.</p>
-            <ol id="combosList" class="list"></ol>
-          </div>
-        </div>
-      </section>
-
-      <!-- PATTERN ENGINE -->
-      <section class="card" id="patternCard">
-        <h2>🧠 Pattern Recognition Engine</h2>
-        <p class="subtext">
-          Last 30 bets, decoded into behavior patterns. This is where you scout yourself.
-        </p>
-        <ul id="patternList" class="alert-list"></ul>
-      </section>
-
-      <!-- TRAPS & ALERTS -->
-      <section class="card">
-        <h2>⚠️ Discipline Warnings</h2>
-        <p class="subtext">Live scan of your behavior today.</p>
-        <ul id="trapList" class="alert-list"></ul>
-        <p id="noTrapsMsg" class="subtext muted"></p>
-      </section>
-
-      <!-- CASHOUTS -->
-      <section class="card scroll-card">
-        <h2>💵 Bankroll Cashouts</h2>
-        <p class="subtext">
-          Record money leaving or entering the bankroll so your numbers stay honest. Cashouts adjust your
-          current bankroll but do not count as betting losses.
-        </p>
-
-        <div class="form-grid">
-          <div class="form-item">
-            <label>Amount</label>
-            <input type="number" id="cashAmount" step="0.01" min="0" placeholder="e.g. 250" />
-          </div>
-          <div class="form-item">
-            <label>Reason / Note</label>
-            <input type="text" id="cashReason" placeholder="Pulled profit, paid bill, deposit, etc." />
-          </div>
-        </div>
-        <div class="form-actions">
-          <button id="recordCashoutBtn" class="btn btn-primary btn-sm">Record Cashout (Funds Out)</button>
-          <button id="recordDepositBtn" class="btn btn-secondary btn-sm">Record Deposit (Funds In)</button>
-        </div>
-
-        <div class="cashout-summary">
-          <div>
-            <span class="label">Total Cashouts:</span>
-            <span id="totalCashoutsDisplay">$0.00</span>
-          </div>
-          <div>
-            <span class="label">Total Deposits:</span>
-            <span id="totalDepositsDisplay">$0.00</span>
-          </div>
-          <div>
-            <span class="label">Net Adjustments:</span>
-            <span id="netAdjustmentsDisplay">$0.00</span>
-          </div>
-        </div>
-
-        <div class="table-wrapper" style="margin-top:0.75rem;">
-          <table id="cashoutTable">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Type</th>
-                <th>Amount</th>
-                <th>Reason</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- BET TABLE -->
+      <!-- LEDGER -->
       <section class="card scroll-card">
         <h2>Playbook Ledger</h2>
-
-        <div class="bets-log-controls">
-          <div>
-            <span class="subtext">Filter:</span>
-            <select id="logFilterSelect">
-              <option value="all">All Plays</option>
-              <option value="today">Today Only</option>
-              <option value="pending">Pending Only</option>
-            </select>
-          </div>
-          <div class="bets-log-buttons">
-            <button id="undoBtn" class="btn btn-secondary btn-sm">Undo Last</button>
-            <button id="exportBetsBtn" class="btn btn-secondary btn-sm">Export Plays (CSV)</button>
-            <button id="resetBetsBtn" class="btn btn-danger btn-sm">Reset Plays</button>
-          </div>
+        <div class="actions-row">
+          <button class="btn btn-sm" id="exportCsvBtn">Export CSV</button>
+          <button class="btn btn-danger btn-sm" id="resetAllBtn">Reset All History</button>
         </div>
-
         <div class="table-wrapper">
-          <table id="betsTable">
+          <table>
             <thead>
               <tr>
                 <th>ID</th>
@@ -946,71 +483,60 @@
                 <th>Odds</th>
                 <th>Stake</th>
                 <th>Result</th>
-                <th>Risk</th>
                 <th>Net</th>
                 <th>Status</th>
                 <th></th>
               </tr>
             </thead>
-            <tbody></tbody>
+            <tbody id="betsTableBody"></tbody>
           </table>
         </div>
       </section>
     </div>
 
-    <!-- VIEW: 10 FLIP MODULE -->
-    <div class="view" data-view="flip">
+    <!-- 10 FLIP VIEW -->
+    <div class="view" id="view-flip">
       <section class="card">
-        <h2>🔁 10 Flip Ladder</h2>
-        <p class="subtext">
-          Set your starting bankroll and target multiplier (e.g., 2x), then log each flip's result.
-          The module tracks up to 10 flips and saves in your browser.
-        </p>
-
+        <h2>🔁 10 Flip Challenge</h2>
+        <p class="subtext">Simple ladder: start bankroll, multiplier, and up to 10 flips.</p>
         <div class="flip-grid">
           <div class="flip-item">
             <label>Starting Bankroll</label>
-            <input type="number" id="flipStartBankroll" step="0.01" />
+            <input type="number" id="flipStart" step="0.01" />
           </div>
           <div class="flip-item">
-            <label>Target Multiplier per Flip</label>
-            <input type="number" id="flipMultiplier" step="0.1" value="2" />
+            <label>Multiplier per Flip</label>
+            <input type="number" id="flipMult" step="0.1" value="2" />
           </div>
           <div class="flip-item">
             <label>Total Flips</label>
             <input type="number" id="flipTotal" value="10" />
           </div>
         </div>
+        <div class="actions-row">
+          <button class="btn btn-primary" id="initFlipBtn">Initialize / Reset</button>
+        </div>
+      </section>
 
-        <button id="initFlipBtn" class="btn btn-primary">Initialize / Reset Challenge</button>
-
-        <div class="card" style="margin-top: 1rem; background:#020617;">
-          <h3 style="margin-top:0;">Current Flip</h3>
-          <div class="flip-meta" id="flipMeta"></div>
-          <div class="flip-item">
-            <label>Result After This Flip (Bankroll)</label>
-            <input type="number" id="flipResultInput" step="0.01" />
-          </div>
-          <button id="saveFlipResultBtn" class="btn btn-secondary" style="margin-top:0.5rem;">
-            Save Flip Outcome
-          </button>
+      <section class="card">
+        <h2>Current Flip</h2>
+        <p class="subtext" id="flipMeta"></p>
+        <div class="flip-item">
+          <label>Bankroll after this Flip</label>
+          <input type="number" id="flipResult" step="0.01" />
+        </div>
+        <div class="actions-row">
+          <button class="btn" id="saveFlipBtn">Save Flip Result</button>
         </div>
       </section>
 
       <section class="card scroll-card">
         <h2>Flip History</h2>
-        <p class="subtext">Track each flip's start, target, result, and status.</p>
-
-        <div class="bets-log-controls">
-          <span class="subtext">History Controls:</span>
-          <div class="bets-log-buttons">
-            <button id="exportFlipBtn" class="btn btn-secondary btn-sm">Export Flips (CSV)</button>
-            <button id="resetFlipBtn" class="btn btn-danger btn-sm">Reset Flip History</button>
-          </div>
+        <div class="actions-row">
+          <button class="btn btn-sm" id="exportFlipCsvBtn">Export Flip CSV</button>
         </div>
-
         <div class="table-wrapper">
-          <table id="flipTable">
+          <table>
             <thead>
               <tr>
                 <th>#</th>
@@ -1020,178 +546,56 @@
                 <th>Status</th>
               </tr>
             </thead>
-            <tbody></tbody>
+            <tbody id="flipTableBody"></tbody>
           </table>
         </div>
       </section>
     </div>
 
-    <!-- VIEW: JOURNAL -->
-    <div class="view" data-view="journal">
+    <!-- JOURNAL VIEW -->
+    <div class="view" id="view-journal">
       <section class="card">
-        <h2>🧾 Journal & Notes</h2>
-        <p class="subtext">
-          Capture what you were thinking before, during, or after the slate. This is how you coach the future you.
-        </p>
-        <textarea id="journalText" class="journal-textarea" placeholder="Today I noticed..."></textarea>
-        <div class="form-actions">
-          <button id="saveJournalBtn" class="btn btn-secondary btn-sm">Save Journal Entry</button>
+        <h2>🧾 Journal</h2>
+        <p class="subtext">Quick notes about your mindset, reads, and lessons.</p>
+        <textarea id="journalInput" class="journal-textarea" placeholder="Today I noticed..."></textarea>
+        <div class="actions-row">
+          <button class="btn" id="saveJournalBtn">Save Entry</button>
         </div>
       </section>
 
       <section class="card scroll-card">
         <h2>Recent Entries</h2>
-        <p class="subtext">
-          Latest journal entries across all sessions. Use this like film study on your own mind.
-        </p>
         <ul id="journalList" class="alert-list"></ul>
       </section>
     </div>
   </div>
 
-  <!-- CONTRACT MODAL -->
-  <div id="contractModal" class="modal-overlay">
-    <div class="modal">
-      <h3>🧾 A-T Discipline Contract</h3>
-      <p class="subtext">
-        Before this session starts, you lock in your non-negotiables. This is your agreement with yourself.
-      </p>
-      <ul>
-        <li>No chasing after 2 straight losses.</li>
-        <li>No Aggressive plays after 9:45 PM.</li>
-        <li>Respect unit sizes (0.5U / 1U / 2U only).</li>
-        <li>Respect stop-loss once hit.</li>
-      </ul>
-      <label class="subtext">
-        Session Label (optional – e.g., "Sunday Slate", "Thanksgiving Grind"):
-      </label>
-      <input type="text" id="sessionLabelInput" class="session-label-input" />
-      <div style="margin-top:0.5rem;">
-        <label>
-          <input type="checkbox" id="contractAcceptCheckbox" />
-          <span class="subtext">I accept the A-T Discipline Contract for this session.</span>
-        </label>
-      </div>
-      <div class="modal-footer">
-        <button id="contractCancelBtn" class="btn btn-secondary btn-sm">Cancel</button>
-        <button id="contractStartBtn" class="btn btn-primary btn-sm">Accept & Start Session</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SESSION REPLAY MODAL -->
-  <div id="replayModal" class="modal-overlay">
-    <div class="modal">
-      <h3>🎥 Session Replay</h3>
-      <p class="subtext">
-        Timeline of this session's plays and discipline moments.
-      </p>
-      <ul id="replayList" class="alert-list"></ul>
-      <div class="modal-footer">
-        <button id="replayCloseBtn" class="btn btn-secondary btn-sm">Close</button>
-      </div>
-    </div>
-  </div>
-
   <script>
-    // ====== GLOBAL STATE ======
-    let bets = [];
+    // ===== BASIC STATE =====
     let settings = {
       bankroll: 0,
-      sessionBankroll: 0,
-      sessionId: "",
-      sessionLabel: "",
-      audioEnabled: false,
-      dailyTarget: 0,
-      maxLoss: 0,
-      unitSize: 0,
-      rules: {
-        maxAggressivePerDay: 3,
-        noBetsAfterHour: 21.75, // 9:45pm
-        maxDailyBets: 15
-      },
-      contractAccepted: false,
-      disciplineContractSignedAt: null
+      unit: 0,
+      target: 0,
+      maxLoss: 0
     };
 
-    let flipState = {
-      startingBankroll: 0,
-      multiplier: 2,
-      totalFlips: 10,
-      currentFlip: 1,
-      history: []
-    };
-
-    let cashouts = [];       // {id,date,time,type,amount,reason}
-    let journalEntries = []; // {id,datetime,sessionId,text}
+    let bets = [];      // {id, date, time, sport, market, desc, odds, stake, result, risk, conf, emotion, net, status}
+    let flipState = { start: 0, mult: 2, total: 10, current: 1, history: [] };
+    let journal = [];
 
     let editingBetId = null;
-    let lastHeatLevel = 0;
-    let lastTrapKeys = [];
-    let undoStack = [];
-    let patternSummary = {
-      notes: [],
-      bestMarket: null,
-      worstMarket: null,
-      aggressiveWinRate: null,
-      safeWinRate: null
-    };
 
-    // ====== STORAGE ======
-    function loadState() {
-      const storedBets = localStorage.getItem("at_bets");
-      const storedSettings = localStorage.getItem("at_settings");
-      const storedFlip = localStorage.getItem("at_flip");
-      const storedCashouts = localStorage.getItem("at_cashouts");
-      const storedJournal = localStorage.getItem("at_journal");
-
-      if (storedBets) bets = JSON.parse(storedBets);
-      if (storedSettings) settings = JSON.parse(storedSettings);
-      if (storedFlip) flipState = JSON.parse(storedFlip);
-      if (storedCashouts) cashouts = JSON.parse(storedCashouts);
-      if (storedJournal) journalEntries = JSON.parse(storedJournal);
+    function todayStr() {
+      return new Date().toISOString().slice(0, 10);
     }
 
-    function saveState() {
-      localStorage.setItem("at_bets", JSON.stringify(bets));
-      localStorage.setItem("at_settings", JSON.stringify(settings));
-      localStorage.setItem("at_flip", JSON.stringify(flipState));
-      localStorage.setItem("at_cashouts", JSON.stringify(cashouts));
-      localStorage.setItem("at_journal", JSON.stringify(journalEntries));
-    }
-
-    function pushUndoSnapshot() {
-      undoStack.push({
-        bets: JSON.parse(JSON.stringify(bets)),
-        settings: JSON.parse(JSON.stringify(settings)),
-        cashouts: JSON.parse(JSON.stringify(cashouts))
-      });
-      if (undoStack.length > 20) undoStack.shift();
-    }
-
-    // ====== HELPERS ======
-    function generateBetId() {
-      return bets.length ? Math.max(...bets.map(b => b.id)) + 1 : 1;
-    }
-
-    function generateSimpleId(arr) {
-      return arr.length ? Math.max(...arr.map(x => x.id || 0)) + 1 : 1;
-    }
-
-    function todayString() {
-      const d = new Date();
-      return d.toISOString().split("T")[0];
-    }
-
-    function calculateNet(result, stake, odds, status) {
+    function calcNet(result, stake, odds, status) {
       if (status !== "Active") return 0;
-      if (!result || result === "Pending") return 0;
       stake = Number(stake || 0);
       odds = Number(odds || 0);
       if (!stake || !odds) return 0;
-
-      if (result === "Push") return 0;
       if (result === "Loss") return -stake;
+      if (result === "Push" || result === "Pending") return 0;
       if (result === "Win") {
         if (odds > 0) return (stake * odds) / 100;
         return (stake * 100) / Math.abs(odds);
@@ -1199,1136 +603,335 @@
       return 0;
     }
 
-    function parseHourFromTimeString(timeStr) {
-      if (!timeStr) return null;
-      const parts = timeStr.split(":");
-      if (parts.length < 2) return null;
-      const hh = parseInt(parts[0], 10);
-      const mm = parseInt(parts[1], 10);
-      if (isNaN(hh)) return null;
-      return hh + (isNaN(mm) ? 0 : mm / 60);
-    }
-
-    function csvEscape(value) {
-      const str = String(value ?? "");
-      return '"' + str.replace(/"/g, '""') + '"';
-    }
-
-    function getEmotionLabel(level) {
-      const n = Number(level || 2);
-      if (n <= 1) return "Calm";
-      if (n === 2) return "Locked-In";
-      if (n === 3) return "Anxious";
-      return "Tilted";
-    }
-
-    // ====== AUDIO ======
-    function speak(text) {
-      if (!settings.audioEnabled) return;
-      if (!window.speechSynthesis) return;
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.rate = 1;
-      utter.pitch = 1;
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utter);
-    }
-
-    // ====== DOM REFS ======
-    const currentBankrollInput = document.getElementById("currentBankroll");
-    const sessionBankrollInput = document.getElementById("sessionBankroll");
-    const unitSizeInput = document.getElementById("unitSize");
-    const dailyTargetInput = document.getElementById("dailyTarget");
-    const maxLossInput = document.getElementById("maxLoss");
-
-    const dailyPLSpan = document.getElementById("dailyPL");
-    const totalPLSpan = document.getElementById("totalPL");
-    const winRateSpan = document.getElementById("winRate");
-    const betsTodaySpan = document.getElementById("betsToday");
-    const heatLevelSpan = document.getElementById("heatLevel");
-    const disciplineScoreSpan = document.getElementById("disciplineScore");
-    const rulesBrokenTodaySpan = document.getElementById("rulesBrokenToday");
-    const sessionLabelDisplay = document.getElementById("sessionLabelDisplay");
-    const sessionIdSpan = document.getElementById("sessionId");
-    const sessionPLSpan = document.getElementById("sessionPL");
-    const sessionBetsSpan = document.getElementById("sessionBets");
-    const sessionStatusText = document.getElementById("sessionStatusText");
-
-    const startSessionBtn = document.getElementById("startSessionBtn");
-    const saveBankrollBtn = document.getElementById("saveBankrollBtn");
-
-    const betForm = document.getElementById("betForm");
-    const formTitle = document.getElementById("formTitle");
-    const submitBetBtn = document.getElementById("submitBetBtn");
-    const cancelEditBtn = document.getElementById("cancelEditBtn");
-
-    const betsTableBody = document.querySelector("#betsTable tbody");
-    const playbook3List = document.getElementById("playbook3List");
-    const combosList = document.getElementById("combosList");
-    const trapList = document.getElementById("trapList");
-    const noTrapsMsg = document.getElementById("noTrapsMsg");
-    const audioToggle = document.getElementById("audioToggle");
-    const speakRecapBtn = document.getElementById("speakRecapBtn");
-    const sessionReplayBtn = document.getElementById("sessionReplayBtn");
-    const logFilterSelect = document.getElementById("logFilterSelect");
-    const exportBetsBtn = document.getElementById("exportBetsBtn");
-    const resetBetsBtn = document.getElementById("resetBetsBtn");
-    const undoBtn = document.getElementById("undoBtn");
-
-    const unitButtons = document.querySelectorAll(".unit-btn");
-    const smartStakeText = document.getElementById("smartStakeText");
-    const emotionLevelInput = document.getElementById("emotionLevel");
-
-    const modeSelect = document.getElementById("modeSelect");
-    const opponentAdvice = document.getElementById("opponentAdvice");
-
-    // pattern & replay
-    const patternList = document.getElementById("patternList");
-    const replayModal = document.getElementById("replayModal");
-    const replayList = document.getElementById("replayList");
-    const replayCloseBtn = document.getElementById("replayCloseBtn");
-
-    // contract modal
-    const contractModal = document.getElementById("contractModal");
-    const sessionLabelInput = document.getElementById("sessionLabelInput");
-    const contractCheckbox = document.getElementById("contractAcceptCheckbox");
-    const contractCancelBtn = document.getElementById("contractCancelBtn");
-    const contractStartBtn = document.getElementById("contractStartBtn");
-
-    // journal
-    const journalText = document.getElementById("journalText");
-    const saveJournalBtn = document.getElementById("saveJournalBtn");
-    const journalList = document.getElementById("journalList");
-
-    // cashouts
-    const cashAmountInput = document.getElementById("cashAmount");
-    const cashReasonInput = document.getElementById("cashReason");
-    const recordCashoutBtn = document.getElementById("recordCashoutBtn");
-    const recordDepositBtn = document.getElementById("recordDepositBtn");
-    const cashoutTableBody = document.querySelector("#cashoutTable tbody");
-    const totalCashoutsDisplay = document.getElementById("totalCashoutsDisplay");
-    const totalDepositsDisplay = document.getElementById("totalDepositsDisplay");
-    const netAdjustmentsDisplay = document.getElementById("netAdjustmentsDisplay");
-
-    // 10 flip refs
-    const flipStartBankrollInput = document.getElementById("flipStartBankroll");
-    const flipMultiplierInput = document.getElementById("flipMultiplier");
-    const flipTotalInput = document.getElementById("flipTotal");
-    const flipMetaDiv = document.getElementById("flipMeta");
-    const flipResultInput = document.getElementById("flipResultInput");
-    const flipTableBody = document.querySelector("#flipTable tbody");
-    const initFlipBtn = document.getElementById("initFlipBtn");
-    const saveFlipResultBtn = document.getElementById("saveFlipResultBtn");
-    const exportFlipBtn = document.getElementById("exportFlipBtn");
-    const resetFlipBtn = document.getElementById("resetFlipBtn");
-
-    // NAV (VIEWS)
-    const navTabs = document.querySelectorAll(".nav-tab");
-    const views = document.querySelectorAll(".view");
-
-    function showView(name) {
-      views.forEach(v => {
-        if (v.getAttribute("data-view") === name) v.classList.add("active");
-        else v.classList.remove("active");
-      });
-      navTabs.forEach(t => {
-        if (t.getAttribute("data-target") === name) t.classList.add("active");
-        else t.classList.remove("active");
-      });
-    }
-
-    navTabs.forEach(tab => {
-      tab.addEventListener("click", () => {
-        const target = tab.getAttribute("data-target");
-        showView(target);
-      });
-    });
-
-    // ====== BETS TABLE ======
-    function getFilteredBetsForTable() {
-      const filter = logFilterSelect ? logFilterSelect.value : "all";
-      const today = todayString();
-
-      return [...bets].filter(b => {
-        if (filter === "today") return b.date === today;
-        if (filter === "pending") return b.status === "Active" && b.result === "Pending";
-        return true;
-      });
-    }
-
-    function renderBetsTable() {
-      betsTableBody.innerHTML = "";
-      const filtered = getFilteredBetsForTable();
-      const sorted = filtered.sort((a, b) => a.id - b.id);
-
-      for (const bet of sorted) {
-        const tr = document.createElement("tr");
-        const statusClass = bet.status === "Active" ? "status-active" : "status-void";
-        const resultClass =
-          bet.result === "Win"
-            ? "result-win"
-            : bet.result === "Loss"
-            ? "result-loss"
-            : bet.result === "Push"
-            ? "result-push"
-            : "result-pending";
-
-        tr.innerHTML = `
-          <td>${bet.id}</td>
-          <td>${bet.date}</td>
-          <td>${bet.time}</td>
-          <td>${bet.sport || ""}</td>
-          <td>${bet.market || ""}</td>
-          <td>${bet.description || ""}</td>
-          <td>${bet.odds}</td>
-          <td>${bet.stake}</td>
-          <td class="${resultClass}">${bet.result}</td>
-          <td>${bet.riskTag || ""}</td>
-          <td>${bet.net.toFixed(2)}</td>
-          <td>
-            <span class="status-pill ${statusClass}">
-              ${bet.status}
-            </span>
-          </td>
-          <td>
-            <button class="btn btn-secondary btn-sm edit" data-id="${bet.id}">Edit</button>
-            <button class="btn btn-secondary btn-sm void" data-id="${bet.id}">
-              ${bet.status === "Active" ? "Void" : "Unvoid"}
-            </button>
-          </td>
-        `;
-        betsTableBody.appendChild(tr);
-      }
-
-      betsTableBody.querySelectorAll(".edit").forEach(btn => {
-        btn.addEventListener("click", () => startEditBet(Number(btn.dataset.id)));
-      });
-      betsTableBody.querySelectorAll(".void").forEach(btn => {
-        btn.addEventListener("click", () => toggleVoidBet(Number(btn.dataset.id)));
-      });
-    }
-
-    // ====== PLAYBOOK & COMBOS ======
-    function riskWeight(riskTag) {
-      if (riskTag === "Safe") return 1.5;
-      if (riskTag === "Standard") return 1.0;
-      if (riskTag === "Aggressive") return 0.5;
-      return 1.0;
-    }
-
-    function buildCandidateBets() {
-      const today = todayString();
-      return bets.filter(
-        b =>
-          b.status === "Active" &&
-          b.result === "Pending" &&
-          b.date === today
-      );
-    }
-
-    function renderPlaybookAndCombos() {
-      const candidates = buildCandidateBets();
-
-      // 3-Bet
-      playbook3List.innerHTML = "";
-      if (candidates.length === 0) {
-        const li = document.createElement("li");
-        li.textContent = "No pending plays for today. Log plays to build the playbook.";
-        playbook3List.appendChild(li);
-      } else {
-        const scored = candidates.map(b => {
-          const score = (b.confidence || 3) * riskWeight(b.riskTag);
-          return { bet: b, score };
-        });
-        scored.sort((a, b) => b.score - a.score);
-        const top3 = scored.slice(0, 3);
-
-        for (const { bet, score } of top3) {
-          const li = document.createElement("li");
-          li.textContent = `#${bet.id} – ${bet.sport || ""} ${bet.market || ""} – ${
-            bet.description || ""
-          } | Odds ${bet.odds} | Stake ${bet.stake} | Risk ${bet.riskTag} | Conf ${
-            bet.confidence
-          } | Score ${score.toFixed(2)}`;
-          playbook3List.appendChild(li);
-        }
-      }
-
-      // 2-leg combos
-      combosList.innerHTML = "";
-      if (candidates.length < 2) {
-        const li = document.createElement("li");
-        li.textContent = "Need at least 2 pending plays today to build combos.";
-        combosList.appendChild(li);
-        return;
-      }
-
-      const combos = [];
-      for (let i = 0; i < candidates.length; i++) {
-        for (let j = i + 1; j < candidates.length; j++) {
-          const a = candidates[i];
-          const b = candidates[j];
-          const scoreA = (a.confidence || 3) * riskWeight(a.riskTag);
-          const scoreB = (b.confidence || 3) * riskWeight(b.riskTag);
-          let comboScore = scoreA + scoreB;
-          if (a.riskTag === "Aggressive" && b.riskTag === "Aggressive") comboScore -= 1;
-          combos.push({ a, b, comboScore });
-        }
-      }
-
-      combos.sort((x, y) => y.comboScore - x.comboScore);
-      const topCombos = combos.slice(0, 3);
-      for (const { a, b, comboScore } of topCombos) {
-        const li = document.createElement("li");
-        li.textContent = `[#${a.id} + #${b.id}] – ${a.description || ""} + ${
-          b.description || ""
-        } | Risk: ${a.riskTag}/${b.riskTag} | Conf: ${a.confidence}/${b.confidence} | Score ${comboScore.toFixed(
-          2
-        )}`;
-        combosList.appendChild(li);
+    function loadState() {
+      try {
+        const s = localStorage.getItem("at_settings_v2");
+        const b = localStorage.getItem("at_bets_v2");
+        const f = localStorage.getItem("at_flip_v2");
+        const j = localStorage.getItem("at_journal_v2");
+        if (s) settings = JSON.parse(s);
+        if (b) bets = JSON.parse(b);
+        if (f) flipState = JSON.parse(f);
+        if (j) journal = JSON.parse(j);
+      } catch (e) {
+        console.error("loadState error", e);
       }
     }
 
-    // ====== RULE BREAKS & CONTRACT ======
-    function countRuleBreaksToday() {
-      const today = todayString();
-      let count = 0;
-      for (const b of bets) {
-        if (b.date === today && Array.isArray(b.ruleBreaks)) {
-          count += b.ruleBreaks.filter(x => x !== "contract_breach").length;
-        }
-      }
-      return count;
+    function saveState() {
+      localStorage.setItem("at_settings_v2", JSON.stringify(settings));
+      localStorage.setItem("at_bets_v2", JSON.stringify(bets));
+      localStorage.setItem("at_flip_v2", JSON.stringify(flipState));
+      localStorage.setItem("at_journal_v2", JSON.stringify(journal));
     }
 
-    function evaluateRuleBreaks(bet) {
-      const breaks = [];
-      const today = todayString();
-      const todaysActive = bets
-        .filter(b => b.status === "Active" && b.date === today)
-        .concat(bet.status === "Active" && bet.date === today && !bets.includes(bet) ? [bet] : []);
-
-      const aggressiveCount = todaysActive.filter(b => b.riskTag === "Aggressive").length;
-      if (aggressiveCount > settings.rules.maxAggressivePerDay) breaks.push("over_aggro");
-
-      const hour = parseHourFromTimeString(bet.time);
-      if (hour && hour > settings.rules.noBetsAfterHour) breaks.push("late_night");
-
-      if (todaysActive.length > settings.rules.maxDailyBets) breaks.push("over_volume");
-
-      // contract breach
-      if (settings.contractAccepted && breaks.length > 0) {
-        breaks.push("contract_breach");
-        speak("Contract breach detected. You just violated your own rules.");
-      }
-
-      bet.ruleBreaks = breaks;
-      return breaks;
-    }
-
-    // ====== TRAPS ======
-    function computeTraps() {
-      const traps = [];
-      const today = todayString();
-      const activeToday = bets
-        .filter(b => b.status === "Active" && b.date === today)
-        .sort((a, b) => a.id - b.id);
-
-      const betsToday = activeToday.length;
-
-      if (betsToday >= 8) {
-        traps.push({
-          key: "high_volume",
-          message: "High volume today: 8+ plays logged. This is a danger zone for overtrading."
-        });
-      }
-
-      if (activeToday.length >= 3) {
-        const last3 = activeToday.slice(-3);
-        if (last3.every(b => b.result === "Loss")) {
-          traps.push({
-            key: "three_losses",
-            message: "Last 3 plays today were losses. Chasing risk is high."
-          });
-        }
-      }
-
-      const aggressiveCount = activeToday.filter(b => b.riskTag === "Aggressive").length;
-      if (aggressiveCount >= 3) {
-        traps.push({
-          key: "aggressive_cluster",
-          message: "You have 3+ aggressive plays today. Check if you’re forcing action."
-        });
-      }
-
-      const lateBets = activeToday.filter(b => {
-        const hour = parseHourFromTimeString(b.time);
-        return hour !== null && hour >= 21.5;
-      });
-      if (lateBets.length >= 4) {
-        traps.push({
-          key: "late_night",
-          message: "Heavy volume after 9:30 PM. Historically discipline collapses here."
-        });
-      }
-
-      const ruleBreaks = countRuleBreaksToday();
-      if (ruleBreaks > 0) {
-        traps.push({
-          key: "rule_breaks",
-          message: `You have ${ruleBreaks} rule breaks recorded today. Respect your contract.`
-        });
-      }
-
-      return traps;
-    }
-
-    function renderTraps() {
-      const traps = computeTraps();
-      trapList.innerHTML = "";
-
-      if (traps.length === 0) {
-        noTrapsMsg.textContent =
-          "No active discipline warnings. Stay disciplined and follow the framework.";
-      } else {
-        noTrapsMsg.textContent = "";
-      }
-
-      const trapKeys = traps.map(t => t.key);
-      const newTraps = traps.filter(t => !lastTrapKeys.includes(t.key));
-
-      for (const t of traps) {
-        const li = document.createElement("li");
-        li.textContent = t.message;
-        trapList.appendChild(li);
-      }
-
-      if (newTraps.length > 0) {
-        const spoken = newTraps.map(t => t.message).join(" ");
-        speak("Trap alert. " + spoken);
-      }
-
-      lastTrapKeys = trapKeys;
-    }
-
-    // ====== DISCIPLINE & SMART STAKE ======
-    function computeDisciplineScore(heatLevel, betsTodayCount) {
-      const today = todayString();
-      const activeToday = bets.filter(b => b.status === "Active" && b.date === today);
-      const aggressiveCount = activeToday.filter(b => b.riskTag === "Aggressive").length;
-      const lateBets = activeToday.filter(b => {
-        const hour = parseHourFromTimeString(b.time);
-        return hour && hour > settings.rules.noBetsAfterHour;
-      }).length;
-      const ruleBreaks = countRuleBreaksToday();
-
-      const sorted = activeToday.slice().sort((a, b) => a.id - b.id);
-      let streak = 0;
-      for (let i = sorted.length - 1; i >= 0; i--) {
-        if (sorted[i].result === "Loss") streak++;
-        else if (sorted[i].result === "Win") break;
-      }
-
-      let score = 100;
-      score -= Math.max(0, betsTodayCount - 8) * 2;
-      score -= aggressiveCount * 2;
-      score -= lateBets * 3;
-      score -= ruleBreaks * 5;
-      score -= Math.max(0, streak - 2) * 4;
-      score -= Math.max(0, heatLevel - 5) * 2;
-
-      score = Math.max(0, Math.min(100, score));
-      return score;
-    }
-
-    function computeSmartStakeRecommendation(heatLevel, disciplineScore) {
-      const score = disciplineScore;
-      if (heatLevel >= 9 || score < 35) {
-        return { maxMult: 0, message: "🚫 System lockdown: no new plays recommended right now." };
-      }
-      if (heatLevel >= 7 || score < 50) {
-        return { maxMult: 0.5, message: "Max 0.5U only. Caution zone—probe, don’t press." };
-      }
-      if (heatLevel >= 5 || score < 75) {
-        return { maxMult: 1, message: "Standard 1U sizing only. No hero shots." };
-      }
-      return { maxMult: 2, message: "You may use 1–2U with discipline." };
-    }
-
-    function renderSmartStakeText() {
-      const heat = Number(heatLevelSpan.textContent || 0);
-      const disciplineScore = Number(disciplineScoreSpan.textContent || 100);
-      const rec = computeSmartStakeRecommendation(heat, disciplineScore);
-      smartStakeText.textContent = rec.message;
-    }
-
-    // ====== PATTERN ENGINE ======
-    function computePatternSummary() {
-      const activeBets = bets.filter(b => b.status === "Active");
-      const last30 = activeBets
-        .slice()
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .slice(0, 30);
-
-      const summary = {
-        notes: [],
-        bestMarket: null,
-        worstMarket: null,
-        aggressiveWinRate: null,
-        safeWinRate: null
-      };
-
-      if (!last30.length) {
-        summary.notes.push("Not enough history yet. Log plays and the engine will start talking.");
-        patternSummary = summary;
-        return;
-      }
-
-      let aggWins = 0, aggTotal = 0;
-      let safeWins = 0, safeTotal = 0;
-
-      const marketStats = {};
-      const timeBuckets = { morning: { w:0,l:0 }, afternoon: { w:0,l:0 }, night:{ w:0,l:0 } };
-
-      for (const b of last30) {
-        if (b.riskTag === "Aggressive") {
-          aggTotal++;
-          if (b.result === "Win") aggWins++;
-        }
-        if (b.riskTag === "Safe") {
-          safeTotal++;
-          if (b.result === "Win") safeWins++;
-        }
-
-        const marketKey = (b.market || "Unknown").toLowerCase();
-        if (!marketStats[marketKey]) marketStats[marketKey] = { net: 0, count: 0 };
-        marketStats[marketKey].net += b.net;
-        marketStats[marketKey].count++;
-
-        const hour = parseHourFromTimeString(b.time);
-        const bucket =
-          !hour ? "morning" :
-          hour < 12 ? "morning" :
-          hour < 18 ? "afternoon" : "night";
-
-        if (b.result === "Win") timeBuckets[bucket].w++;
-        if (b.result === "Loss") timeBuckets[bucket].l++;
-      }
-
-      if (aggTotal > 0) summary.aggressiveWinRate = (aggWins / aggTotal) * 100;
-      if (safeTotal > 0) summary.safeWinRate = (safeWins / safeTotal) * 100;
-
-      const markets = Object.entries(marketStats);
-      if (markets.length) {
-        markets.sort((a, b) => b[1].net - a[1].net);
-        summary.bestMarket = markets[0][0];
-        summary.worstMarket = markets[markets.length - 1][0];
-      }
-
-      if (summary.aggressiveWinRate !== null) {
-        summary.notes.push(
-          `Aggressive plays are ${summary.aggressiveWinRate.toFixed(1)}% over your last 30.`
-        );
-      }
-      if (summary.safeWinRate !== null) {
-        summary.notes.push(
-          `Safe plays are ${summary.safeWinRate.toFixed(1)}% over your last 30.`
-        );
-      }
-
-      const tb = timeBuckets;
-      function bucketNote(name, label) {
-        const b = tb[name];
-        const total = b.w + b.l;
-        if (!total) return null;
-        const wr = (b.w / total) * 100;
-        return `${label} win rate is ${wr.toFixed(1)}% (${total} plays).`;
-      }
-
-      const morningNote = bucketNote("morning", "Morning");
-      const afternoonNote = bucketNote("afternoon", "Afternoon");
-      const nightNote = bucketNote("night", "Night");
-
-      if (morningNote) summary.notes.push(morningNote);
-      if (afternoonNote) summary.notes.push(afternoonNote);
-      if (nightNote) summary.notes.push(nightNote);
-
-      if (summary.bestMarket) {
-        summary.notes.push(
-          `Best market recently: ${summary.bestMarket} by profit.`
-        );
-      }
-      if (summary.worstMarket && summary.worstMarket !== summary.bestMarket) {
-        summary.notes.push(
-          `Worst market recently: ${summary.worstMarket}. Consider fading this pattern.`
-        );
-      }
-
-      if (!summary.notes.length) {
-        summary.notes.push("Patterns are still forming. Log more volume for clearer reads.");
-      }
-
-      patternSummary = summary;
-    }
-
-    function renderPatternCard() {
-      patternList.innerHTML = "";
-      if (!patternSummary.notes || !patternSummary.notes.length) {
-        const li = document.createElement("li");
-        li.textContent = "Not enough data for pattern recognition yet.";
-        patternList.appendChild(li);
-        return;
-      }
-      for (const note of patternSummary.notes.slice(0, 5)) {
-        const li = document.createElement("li");
-        li.textContent = note;
-        patternList.appendChild(li);
-      }
-    }
-
-    // ====== OPPONENT MODE ======
-    function updateOpponentAdvice() {
-      const mode = modeSelect.value;
-      const market = (document.getElementById("betMarket").value || "").toLowerCase();
-
-      if (!patternSummary || !patternSummary.notes) {
-        opponentAdvice.textContent = "";
-        return;
-      }
-
-      if (mode === "standard") {
-        opponentAdvice.textContent = "";
-        return;
-      }
-
-      if (mode === "green" && patternSummary.bestMarket) {
-        const best = patternSummary.bestMarket;
-        if (market && best.includes(market)) {
-          opponentAdvice.textContent =
-            "Green Zone: This looks like one of your profitable markets. Stay disciplined with sizing.";
-        } else {
-          opponentAdvice.textContent =
-            `Green Zone: Your best recent market is "${patternSummary.bestMarket}". Double-check if this play fits that lane.`;
-        }
-      } else if (mode === "fade" && patternSummary.worstMarket) {
-        const worst = patternSummary.worstMarket;
-        if (market && worst.includes(market)) {
-          opponentAdvice.textContent =
-            "Fade Flag: This pattern has been bad for you historically. Only fire if the edge is real.";
-        } else {
-          opponentAdvice.textContent =
-            `Fade Mode: Historically weakest market is "${patternSummary.worstMarket}". Make sure you’re not drifting there.`;
-        }
-      } else {
-        opponentAdvice.textContent = "";
-      }
-    }
-
-    // ====== SESSION REPLAY ======
-    function openReplayModal() {
-      replayList.innerHTML = "";
-      if (!settings.sessionId) {
-        const li = document.createElement("li");
-        li.textContent = "No active session ID. Start a session and log plays to replay.";
-        replayList.appendChild(li);
-        replayModal.classList.add("active");
-        return;
-      }
-      const sessionBets = bets
-        .filter(b => b.sessionId === settings.sessionId)
-        .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-      if (!sessionBets.length) {
-        const li = document.createElement("li");
-        li.textContent = "No plays logged for this session yet.";
-        replayList.appendChild(li);
-      } else {
-        let lossStreak = 0;
-        for (const b of sessionBets) {
-          const li = document.createElement("li");
-          li.textContent = `${b.time} – ${b.riskTag} – ${b.description || ""} – ${
-            b.result
-          } (${b.net.toFixed(2)})`;
-          replayList.appendChild(li);
-
-          if (b.result === "Loss") lossStreak++;
-          else if (b.result === "Win") lossStreak = 0;
-
-          if (lossStreak === 3) {
-            const warn = document.createElement("li");
-            warn.textContent = "Tilt spike: 3 straight losses at this point.";
-            replayList.appendChild(warn);
-          }
-
-          if (Array.isArray(b.ruleBreaks) && b.ruleBreaks.includes("contract_breach")) {
-            const warn = document.createElement("li");
-            warn.textContent = "Contract breach occurred on this play.";
-            replayList.appendChild(warn);
-          }
-        }
-      }
-      replayModal.classList.add("active");
-    }
-
-    function closeReplayModal() {
-      replayModal.classList.remove("active");
-    }
-
-    // ====== JOURNAL ======
-    function renderJournal() {
-      journalList.innerHTML = "";
-      if (!journalEntries.length) {
-        const li = document.createElement("li");
-        li.textContent = "No journal entries yet. Capture what you learned after each slate.";
-        journalList.appendChild(li);
-        return;
-      }
-      const sorted = journalEntries
-        .slice()
-        .sort((a, b) => new Date(b.datetime) - new Date(a.datetime))
-        .slice(0, 20);
-
-      for (const entry of sorted) {
-        const dt = new Date(entry.datetime);
-        const dateStr = dt.toLocaleDateString();
-        const timeStr = dt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-        const li = document.createElement("li");
-        li.textContent = `${dateStr} ${timeStr} – ${entry.text}`;
-        journalList.appendChild(li);
-      }
-    }
-
-    function saveJournalEntry() {
-      const text = (journalText.value || "").trim();
-      if (!text) return;
-      const entry = {
-        id: generateSimpleId(journalEntries),
-        datetime: new Date().toISOString(),
-        sessionId: settings.sessionId || null,
-        text
-      };
-      journalEntries.push(entry);
-      journalText.value = "";
-      saveState();
-      renderJournal();
-    }
-
-    // ====== CASHOUTS ======
-    function renderCashouts() {
-      cashoutTableBody.innerHTML = "";
-      let totalOut = 0;
-      let totalIn = 0;
-
-      const sorted = cashouts
-        .slice()
-        .sort((a, b) => new Date(b.date + " " + b.time) - new Date(a.date + " " + a.time))
-        .slice(0, 50);
-
-      for (const c of sorted) {
-        if (c.type === "cashout") totalOut += c.amount;
-        if (c.type === "deposit") totalIn += c.amount;
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${c.date}</td>
-          <td>${c.time}</td>
-          <td>${c.type === "cashout" ? "Cashout" : "Deposit"}</td>
-          <td>${(c.type === "cashout" ? "-" : "+") + c.amount.toFixed(2)}</td>
-          <td>${c.reason || ""}</td>
-        `;
-        cashoutTableBody.appendChild(tr);
-      }
-
-      totalCashoutsDisplay.textContent = "$" + totalOut.toFixed(2);
-      totalDepositsDisplay.textContent = "$" + totalIn.toFixed(2);
-      const net = totalIn - totalOut;
-      const sign = net >= 0 ? "+" : "-";
-      netAdjustmentsDisplay.textContent = `${sign}$${Math.abs(net).toFixed(2)}`;
-    }
-
-    function recordCashEvent(type) {
-      const rawAmount = Number(cashAmountInput.value);
-      if (!rawAmount || rawAmount <= 0) {
-        alert("Enter a positive amount.");
-        return;
-      }
-      const reason = (cashReasonInput.value || "").trim();
-      const date = todayString();
-      const now = new Date();
-      const time = now.toTimeString().slice(0, 5);
-
-      pushUndoSnapshot();
-
-      const event = {
-        id: generateSimpleId(cashouts),
-        date,
-        time,
-        type,
-        amount: rawAmount,
-        reason
-      };
-      cashouts.push(event);
-
-      const current = Number(settings.bankroll || 0);
-      const delta = type === "cashout" ? -rawAmount : rawAmount;
-      settings.bankroll = current + delta;
-      currentBankrollInput.value = settings.bankroll;
-
-      cashAmountInput.value = "";
-      cashReasonInput.value = "";
-
-      saveState();
-      renderCashouts();
-      renderDashboard();
-
-      if (type === "cashout") {
-        speak("Cashout recorded. You pulled profit out of the system.");
-      } else {
-        speak("Deposit recorded. Bankroll updated.");
-      }
-    }
-
-    // ====== DASHBOARD ======
+    // ===== DASHBOARD RENDER =====
     function renderDashboard() {
-      currentBankrollInput.value =
-        settings.bankroll !== undefined ? settings.bankroll : "";
-      sessionBankrollInput.value =
-        settings.sessionBankroll !== undefined ? settings.sessionBankroll : "";
-      unitSizeInput.value = settings.unitSize || "";
-      dailyTargetInput.value = settings.dailyTarget || "";
-      maxLossInput.value = settings.maxLoss || "";
+      document.getElementById("bankrollInput").value = settings.bankroll || "";
+      document.getElementById("unitInput").value = settings.unit || "";
+      document.getElementById("targetInput").value = settings.target || "";
+      document.getElementById("maxLossInput").value = settings.maxLoss || "";
 
-      sessionLabelDisplay.textContent = settings.sessionLabel || "—";
-      sessionIdSpan.textContent = settings.sessionId || "—";
-      audioToggle.checked = !!settings.audioEnabled;
-
-      const today = todayString();
+      const today = todayStr();
       let dailyNet = 0;
       let totalNet = 0;
       let wins = 0;
       let losses = 0;
-      let totalBetsCount = 0;
-      let betsTodayCount = 0;
+      let betsToday = 0;
 
-      const activeBets = bets.filter(b => b.status === "Active");
-
-      for (const b of activeBets) {
+      bets.forEach(b => {
         totalNet += b.net;
         if (b.result === "Win") wins++;
         if (b.result === "Loss") losses++;
-        if (b.result === "Win" || b.result === "Loss") totalBetsCount++;
-
         if (b.date === today) {
           dailyNet += b.net;
-          betsTodayCount++;
+          betsToday++;
         }
+      });
+
+      document.getElementById("dailyPL").textContent = dailyNet.toFixed(2);
+      document.getElementById("totalPL").textContent = totalNet.toFixed(2);
+
+      const totalPlayed = wins + losses;
+      const winRate = totalPlayed ? (wins / totalPlayed) * 100 : 0;
+      document.getElementById("winRate").textContent = winRate.toFixed(1) + "%";
+      document.getElementById("betsToday").textContent = betsToday;
+
+      // simple heat: bets today + recent losses
+      const recent = bets.filter(b => b.date === today).slice(-5);
+      const recentLosses = recent.filter(b => b.result === "Loss").length;
+      let heat = Math.min(10, betsToday + recentLosses * 2);
+      const heatEl = document.getElementById("heatLevel");
+      heatEl.textContent = heat;
+      heatEl.className = "dash-value";
+      if (heat <= 3) heatEl.classList.add("heat-low");
+      else if (heat <= 7) heatEl.classList.add("heat-medium");
+      else heatEl.classList.add("heat-high");
+
+      const hintEl = document.getElementById("stakeHint");
+      if (!settings.unit) {
+        hintEl.textContent = "Set a unit size above to use 0.5U / 1U / 2U buttons.";
+      } else if (heat >= 8) {
+        hintEl.textContent = "Heat high – strongly consider shrinking size or shutting it down.";
+      } else if (heat >= 5) {
+        hintEl.textContent = "Moderate heat – stick to 0.5U to 1U only.";
+      } else {
+        hintEl.textContent = "Low heat – you may use 0.5U / 1U / 2U with discipline.";
       }
-
-      dailyPLSpan.textContent = dailyNet.toFixed(2);
-      totalPLSpan.textContent = totalNet.toFixed(2);
-      betsTodaySpan.textContent = betsTodayCount;
-
-      const winRate =
-        totalBetsCount === 0 ? 0 : (wins / (wins + losses || 1)) * 100;
-      winRateSpan.textContent = `${winRate.toFixed(1)}%`;
-
-      let sessionNet = 0;
-      let sessionBetsCount = 0;
-      if (settings.sessionId) {
-        const sessionBetsArr = activeBets.filter(
-          b => b.sessionId === settings.sessionId
-        );
-        for (const b of sessionBetsArr) {
-          sessionNet += b.net;
-          if (["Win", "Loss", "Push"].includes(b.result)) {
-            sessionBetsCount++;
-          }
-        }
-      }
-      sessionPLSpan.textContent = sessionNet.toFixed(2);
-      sessionBetsSpan.textContent = sessionBetsCount;
-
-      const recentActive = activeBets
-        .filter(b => b.date === today)
-        .sort((a, b) => b.id - a.id)
-        .slice(0, 5);
-      const recentLosses = recentActive.filter(b => b.result === "Loss").length;
-      const heatBase = betsTodayCount;
-      let heatScore = Math.min(10, heatBase + recentLosses * 2);
-
-      heatLevelSpan.textContent = heatScore.toString();
-      heatLevelSpan.classList.remove("heat-low", "heat-medium", "heat-high");
-      if (heatScore <= 3) heatLevelSpan.classList.add("heat-low");
-      else if (heatScore <= 7) heatLevelSpan.classList.add("heat-medium");
-      else heatLevelSpan.classList.add("heat-high");
-
-      if (heatScore >= 8 && lastHeatLevel < 8) {
-        speak("Heat is high. Consider slowing down or shutting it down.");
-      }
-      lastHeatLevel = heatScore;
-
-      const disciplineScore = computeDisciplineScore(heatScore, betsTodayCount);
-      disciplineScoreSpan.textContent = disciplineScore.toFixed(0);
-      rulesBrokenTodaySpan.textContent = countRuleBreaksToday();
-
-      const target = Number(settings.dailyTarget || 0);
-      const maxLoss = Number(settings.maxLoss || 0);
-      let statusText = "Status: In Range.";
-      if (target > 0 && dailyNet >= target) {
-        statusText = "Status: 🎯 Daily target hit. System suggests shutting it down.";
-      } else if (maxLoss > 0 && dailyNet <= -Math.abs(maxLoss)) {
-        statusText = "Status: 🛑 Stop-loss hit. No new plays recommended.";
-      }
-      sessionStatusText.textContent = statusText;
-
-      renderPlaybookAndCombos();
-      renderTraps();
-      computePatternSummary();
-      renderPatternCard();
-      renderSmartStakeText();
-      updateOpponentAdvice();
     }
 
-    // ====== BETS CRUD ======
-    function getFormData() {
+    // ===== BETS RENDER =====
+    function renderBetsTable() {
+      const tbody = document.getElementById("betsTableBody");
+      tbody.innerHTML = "";
+      const rows = bets.slice().sort((a, b) => a.id - b.id);
+      rows.forEach(b => {
+        const tr = document.createElement("tr");
+        const resultClass =
+          b.result === "Win" ? "result-win" :
+          b.result === "Loss" ? "result-loss" :
+          b.result === "Pending" ? "result-pending" : "";
+
+        tr.innerHTML = `
+          <td>${b.id}</td>
+          <td>${b.date}</td>
+          <td>${b.time}</td>
+          <td>${b.sport || ""}</td>
+          <td>${b.market || ""}</td>
+          <td>${b.desc || ""}</td>
+          <td>${b.odds}</td>
+          <td>${b.stake.toFixed(2)}</td>
+          <td class="${resultClass}">${b.result}</td>
+          <td>${b.net.toFixed(2)}</td>
+          <td>
+            <span class="status-pill ${b.status === "Active" ? "status-active" : "status-void"}">
+              ${b.status}
+            </span>
+          </td>
+          <td>
+            <button class="btn btn-sm" data-action="edit" data-id="${b.id}">Edit</button>
+            <button class="btn btn-sm" data-action="toggle" data-id="${b.id}">
+              ${b.status === "Active" ? "Void" : "Unvoid"}
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      tbody.querySelectorAll("button").forEach(btn => {
+        const id = Number(btn.dataset.id);
+        if (btn.dataset.action === "edit") {
+          btn.addEventListener("click", () => startEditBet(id));
+        } else if (btn.dataset.action === "toggle") {
+          btn.addEventListener("click", () => toggleBetStatus(id));
+        }
+      });
+    }
+
+    // ===== BET FORM LOGIC =====
+    function getBetFormData() {
+      const date = document.getElementById("betDate").value || todayStr();
+      const time = document.getElementById("betTime").value || new Date().toTimeString().slice(0,5);
+      const sport = document.getElementById("betSport").value.trim();
+      const market = document.getElementById("betMarket").value.trim();
+      const desc = document.getElementById("betDesc").value.trim();
+      const oddsVal = parseFloat(document.getElementById("betOdds").value);
+      const stakeVal = parseFloat(document.getElementById("betStake").value);
+      const result = document.getElementById("betResult").value;
+      const risk = document.getElementById("betRisk").value;
+      const conf = parseInt(document.getElementById("betConf").value || "3", 10);
+      const emotion = document.getElementById("betEmotion").value.trim();
+
+      if (Number.isNaN(oddsVal) || Number.isNaN(stakeVal)) {
+        alert("Enter numeric odds and stake before saving.");
+        return null;
+      }
+
       return {
-        date: document.getElementById("betDate").value || todayString(),
-        time:
-          document.getElementById("betTime").value ||
-          new Date().toTimeString().slice(0, 5),
-        sport: document.getElementById("betSport").value.trim(),
-        market: document.getElementById("betMarket").value.trim(),
-        description: document.getElementById("betDescription").value.trim(),
-        odds: Number(document.getElementById("betOdds").value),
-        stake: Number(document.getElementById("betStake").value),
-        result: document.getElementById("betResult").value,
-        riskTag: document.getElementById("betRiskTag").value,
-        confidence: Number(document.getElementById("betConfidence").value),
-        emotion: document.getElementById("betEmotion").value.trim(),
-        emotionLevel: Number(emotionLevelInput.value || 2)
+        date,
+        time,
+        sport,
+        market,
+        desc,
+        odds: oddsVal,
+        stake: stakeVal,
+        result,
+        risk,
+        conf,
+        emotion
       };
     }
 
-    function setFormData(bet) {
-      document.getElementById("betDate").value = bet.date;
-      document.getElementById("betTime").value = bet.time;
-      document.getElementById("betSport").value = bet.sport;
-      document.getElementById("betMarket").value = bet.market;
-      document.getElementById("betDescription").value = bet.description;
-      document.getElementById("betOdds").value = bet.odds;
-      document.getElementById("betStake").value = bet.stake;
-      document.getElementById("betResult").value = bet.result;
-      document.getElementById("betRiskTag").value = bet.riskTag;
-      document.getElementById("betConfidence").value = bet.confidence;
-      document.getElementById("betEmotion").value = bet.emotion || "";
-      emotionLevelInput.value = bet.emotionLevel || 2;
-      updateOpponentAdvice();
-      renderSmartStakeText();
-    }
-
-    function clearForm() {
-      betForm.reset();
-      document.getElementById("betDate").value = todayString();
-      emotionLevelInput.value = 2;
-      opponentAdvice.textContent = "";
-      renderSmartStakeText();
+    function clearBetForm() {
+      const form = document.getElementById("betForm");
+      form.reset();
+      document.getElementById("betDate").value = todayStr();
+      document.getElementById("betTime").value = new Date().toTimeString().slice(0,5);
+      editingBetId = null;
+      document.getElementById("formTitle").textContent = "Log a Play";
+      document.getElementById("savePlayBtn").textContent = "Save Play";
+      document.getElementById("cancelEditBtn").style.display = "none";
     }
 
     function startEditBet(id) {
-      const bet = bets.find(b => b.id === id);
-      if (!bet) return;
+      const b = bets.find(x => x.id === id);
+      if (!b) return;
       editingBetId = id;
-      formTitle.textContent = `Edit Play #${id}`;
-      submitBetBtn.textContent = "Update Play";
-      cancelEditBtn.style.display = "inline-block";
-      setFormData(bet);
-      // scroll up to form
+      document.getElementById("formTitle").textContent = "Edit Play #" + id;
+      document.getElementById("savePlayBtn").textContent = "Update Play";
+      document.getElementById("cancelEditBtn").style.display = "inline-block";
+
+      document.getElementById("betDate").value = b.date;
+      document.getElementById("betTime").value = b.time;
+      document.getElementById("betSport").value = b.sport;
+      document.getElementById("betMarket").value = b.market;
+      document.getElementById("betDesc").value = b.desc;
+      document.getElementById("betOdds").value = b.odds;
+      document.getElementById("betStake").value = b.stake;
+      document.getElementById("betResult").value = b.result;
+      document.getElementById("betRisk").value = b.risk;
+      document.getElementById("betConf").value = b.conf;
+      document.getElementById("betEmotion").value = b.emotion || "";
+
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    function cancelEdit() {
-      editingBetId = null;
-      formTitle.textContent = "Log a Play";
-      submitBetBtn.textContent = "Save Play";
-      cancelEditBtn.style.display = "none";
-      clearForm();
-    }
-
-    function toggleVoidBet(id) {
-      const bet = bets.find(b => b.id === id);
-      if (!bet) return;
-      pushUndoSnapshot();
-      bet.status = bet.status === "Active" ? "Void" : "Active";
-      bet.net = calculateNet(bet.result, bet.stake, bet.odds, bet.status);
+    function toggleBetStatus(id) {
+      const b = bets.find(x => x.id === id);
+      if (!b) return;
+      b.status = b.status === "Active" ? "Void" : "Active";
+      b.net = calcNet(b.result, b.stake, b.odds, b.status);
       saveState();
       renderBetsTable();
       renderDashboard();
     }
 
-    // ====== SESSION ======
-    function openContractModal() {
-      contractCheckbox.checked = false;
-      sessionLabelInput.value = "";
-      contractModal.classList.add("active");
-    }
+    function handleBetSubmit(e) {
+      e.preventDefault();
+      const data = getBetFormData();
+      if (!data) return;
 
-    function closeContractModal() {
-      contractModal.classList.remove("active");
-    }
-
-    function startNewSession() {
-      const now = new Date();
-      const stamp = now.toISOString().replace(/[-:]/g, "").slice(0, 15);
-      const newId = `S_${stamp}`;
-      settings.sessionId = newId;
-      settings.sessionBankroll = Number(currentBankrollInput.value) || 0;
-      settings.sessionLabel = sessionLabelInput.value.trim() || `Session ${newId}`;
-      settings.contractAccepted = true;
-      settings.disciplineContractSignedAt = new Date().toISOString();
-      saveState();
-      renderDashboard();
-      speak("New session started. Contract locked in. Stick to the framework.");
-    }
-
-    // ====== EXPORT / RESET BETS ======
-    function exportBetsCSV() {
-      if (!bets.length) {
-        alert("No plays to export yet.");
-        return;
+      if (editingBetId !== null) {
+        const b = bets.find(x => x.id === editingBetId);
+        if (!b) return;
+        Object.assign(b, data);
+        b.net = calcNet(b.result, b.stake, b.odds, b.status || "Active");
+      } else {
+        const id = bets.length ? Math.max(...bets.map(x => x.id)) + 1 : 1;
+        const bet = {
+          id,
+          ...data,
+          net: calcNet(data.result, data.stake, data.odds, "Active"),
+          status: "Active",
+          createdAt: new Date().toISOString()
+        };
+        bets.push(bet);
       }
 
-      const headers = [
-        "id",
-        "date",
-        "time",
-        "sport",
-        "market",
-        "description",
-        "odds",
-        "stake",
-        "result",
-        "riskTag",
-        "confidence",
-        "emotion",
-        "emotionLevel",
-        "net",
-        "status",
-        "sessionId",
-        "sessionLabel",
-        "createdAt",
-        "ruleBreaks"
-      ];
-
-      const rows = bets.map(b => [
-        b.id,
-        b.date,
-        b.time,
-        b.sport,
-        b.market,
-        b.description,
-        b.odds,
-        b.stake,
-        b.result,
-        b.riskTag,
-        b.confidence,
-        b.emotion,
-        b.emotionLevel,
-        b.net,
-        b.status,
-        b.sessionId,
-        b.sessionLabel,
-        b.createdAt,
-        (b.ruleBreaks || []).join("|")
-      ]);
-
-      const csv =
-        headers.map(csvEscape).join(",") +
-        "\n" +
-        rows.map(r => r.map(csvEscape).join(",")).join("\n");
-
-      const blob = new Blob([csv], { type: "text/csv" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "at_plays_export.csv";
-      a.click();
-      URL.revokeObjectURL(url);
+      saveState();
+      renderBetsTable();
+      renderDashboard();
+      clearBetForm();
     }
 
-    function resetBets() {
-      if (!confirm("This will delete all plays from this browser. Continue?")) return;
-      pushUndoSnapshot();
+    // ===== SETTINGS EVENTS =====
+    function saveSettings() {
+      settings.bankroll = parseFloat(document.getElementById("bankrollInput").value) || 0;
+      settings.unit = parseFloat(document.getElementById("unitInput").value) || 0;
+      settings.target = parseFloat(document.getElementById("targetInput").value) || 0;
+      settings.maxLoss = parseFloat(document.getElementById("maxLossInput").value) || 0;
+      saveState();
+      renderDashboard();
+    }
+
+    function resetToday() {
+      const today = todayStr();
+      bets.forEach(b => {
+        if (b.date === today) {
+          b.status = "Void";
+          b.net = 0;
+        }
+      });
+      saveState();
+      renderBetsTable();
+      renderDashboard();
+    }
+
+    function resetAllHistory() {
+      if (!confirm("This will delete ALL logged plays in this browser. Continue?")) return;
       bets = [];
       saveState();
       renderBetsTable();
       renderDashboard();
     }
 
-    function undoLast() {
-      const snapshot = undoStack.pop();
-      if (!snapshot) {
-        alert("Nothing to undo.");
+    function exportBetsCsv() {
+      if (!bets.length) {
+        alert("No plays to export yet.");
         return;
       }
-      bets = snapshot.bets;
-      settings = snapshot.settings;
-      cashouts = snapshot.cashouts || cashouts;
-      saveState();
-      renderBetsTable();
-      renderDashboard();
-      renderFlipModule();
-      renderCashouts();
+      const headers = [
+        "id","date","time","sport","market","description",
+        "odds","stake","result","risk","confidence","emotion","net","status"
+      ];
+      const rows = bets.map(b => [
+        b.id, b.date, b.time, b.sport, b.market, b.desc,
+        b.odds, b.stake, b.result, b.risk, b.conf, b.emotion, b.net, b.status
+      ]);
+      const csv = [
+        headers.join(","),
+        ...rows.map(r => r.map(v => `"${String(v ?? "").replace(/"/g,'""')}"`).join(","))
+      ].join("\n");
+
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "at_plays.csv";
+      a.click();
+      URL.revokeObjectURL(url);
     }
 
-    // ====== 10 FLIP MODULE ======
+    // ===== UNIT BUTTONS =====
+    function handleUnitButtonClick(mult) {
+      const unit = settings.unit || 0;
+      const stakeInput = document.getElementById("betStake");
+      if (!unit) {
+        alert("Set a unit size on the Dashboard first.");
+        return;
+      }
+      stakeInput.value = (unit * mult).toFixed(2);
+    }
+
+    // ===== 10 FLIP =====
     function currentFlipStart() {
-      if (flipState.currentFlip === 1) return flipState.startingBankroll;
-      const prev = flipState.history.find(h => h.flip === flipState.currentFlip - 1);
-      return prev ? prev.result : flipState.startingBankroll;
+      if (flipState.current === 1) return flipState.start;
+      const prev = flipState.history.find(h => h.flip === flipState.current - 1);
+      return prev ? prev.result : flipState.start;
     }
 
     function currentFlipTarget() {
-      const start = currentFlipStart();
-      return start * flipState.multiplier;
+      return currentFlipStart() * flipState.mult;
     }
 
-    function initFlipChallenge() {
-      const start = Number(flipStartBankrollInput.value) || 0;
-      const mult = Number(flipMultiplierInput.value) || 2;
-      const total = Math.max(1, Number(flipTotalInput.value) || 10);
+    function renderFlip() {
+      document.getElementById("flipStart").value = flipState.start || "";
+      document.getElementById("flipMult").value = flipState.mult || 2;
+      document.getElementById("flipTotal").value = flipState.total || 10;
 
-      flipState.startingBankroll = start;
-      flipState.multiplier = mult;
-      flipState.totalFlips = total;
-      flipState.currentFlip = 1;
-      flipState.history = [];
-      saveState();
-      renderFlipModule();
-    }
-
-    function renderFlipModule() {
-      flipStartBankrollInput.value = flipState.startingBankroll || "";
-      flipMultiplierInput.value = flipState.multiplier || 2;
-      flipTotalInput.value = flipState.totalFlips || 10;
-
-      const cf = flipState.currentFlip;
-      if (cf > flipState.totalFlips) {
-        flipMetaDiv.innerHTML = `<span>Challenge complete. You finished all ${
-          flipState.totalFlips
-        } flips.</span>`;
+      const metaEl = document.getElementById("flipMeta");
+      if (flipState.current > flipState.total) {
+        metaEl.textContent = `Challenge complete – finished ${flipState.total} flips.`;
       } else {
-        const start = currentFlipStart();
-        const target = currentFlipTarget();
-        flipMetaDiv.innerHTML = `
-          <span>Flip: <strong>${cf} / ${flipState.totalFlips}</strong></span>
-          <span>Starting Bankroll this Flip: <strong>${start.toFixed(2)}</strong></span>
-          <span>Target for this Flip (x${flipState.multiplier}): <strong>${target.toFixed(
-          2
-        )}</strong></span>
-        `;
+        metaEl.textContent =
+          `Flip ${flipState.current} of ${flipState.total}. ` +
+          `Start this flip: ${currentFlipStart().toFixed(2)}. ` +
+          `Target: ${currentFlipTarget().toFixed(2)}.`;
       }
 
-      flipTableBody.innerHTML = "";
-      const rows = flipState.history || [];
-      for (const h of rows) {
+      const tbody = document.getElementById("flipTableBody");
+      tbody.innerHTML = "";
+      flipState.history.forEach(h => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${h.flip}</td>
@@ -2337,267 +940,153 @@
           <td>${h.result.toFixed(2)}</td>
           <td>${h.status}</td>
         `;
-        flipTableBody.appendChild(tr);
-      }
+        tbody.appendChild(tr);
+      });
     }
 
-    function saveFlipOutcome() {
-      if (flipState.currentFlip > flipState.totalFlips) {
+    function initFlip() {
+      flipState.start = parseFloat(document.getElementById("flipStart").value) || 0;
+      flipState.mult = parseFloat(document.getElementById("flipMult").value) || 2;
+      flipState.total = Math.max(1, parseInt(document.getElementById("flipTotal").value || "10", 10));
+      flipState.current = 1;
+      flipState.history = [];
+      saveState();
+      renderFlip();
+    }
+
+    function saveFlipResult() {
+      if (flipState.current > flipState.total) {
         alert("Challenge already complete.");
         return;
       }
-
-      const resultVal = Number(flipResultInput.value);
-      if (!resultVal && resultVal !== 0) {
+      const resultVal = parseFloat(document.getElementById("flipResult").value);
+      if (Number.isNaN(resultVal)) {
         alert("Enter the bankroll result after this flip.");
         return;
       }
-
-      const flipNum = flipState.currentFlip;
+      const flipNum = flipState.current;
       const start = currentFlipStart();
       const target = currentFlipTarget();
       const status = resultVal >= target ? "Win" : "Loss";
 
-      flipState.history.push({
-        flip: flipNum,
-        start,
-        target,
-        result: resultVal,
-        status
-      });
-
-      flipState.currentFlip = flipNum + 1;
-      flipResultInput.value = "";
+      flipState.history.push({ flip: flipNum, start, target, result: resultVal, status });
+      flipState.current++;
+      document.getElementById("flipResult").value = "";
       saveState();
-      renderFlipModule();
+      renderFlip();
     }
 
-    function exportFlipCSV() {
+    function exportFlipCsv() {
       if (!flipState.history.length) {
-        alert("No flip history to export yet.");
+        alert("No flip history yet.");
         return;
       }
-
-      const headers = ["flip", "start", "target", "result", "status"];
+      const headers = ["flip","start","target","result","status"];
       const rows = flipState.history.map(h => [
-        h.flip,
-        h.start,
-        h.target,
-        h.result,
-        h.status
+        h.flip, h.start, h.target, h.result, h.status
       ]);
-
-      const csv =
-        headers.map(csvEscape).join(",") +
-        "\n" +
-        rows.map(r => r.map(csvEscape).join(",")).join("\n");
+      const csv = [
+        headers.join(","),
+        ...rows.map(r => r.map(v => `"${String(v ?? "").replace(/"/g,'""')}"`).join(","))
+      ].join("\n");
 
       const blob = new Blob([csv], { type: "text/csv" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "at_flip_history.csv";
+      a.download = "at_flip.csv";
       a.click();
       URL.revokeObjectURL(url);
     }
 
-    function resetFlipHistory() {
-      if (!confirm("This will clear only flip history (not your base config). Continue?")) return;
-      flipState.history = [];
-      flipState.currentFlip = 1;
-      saveState();
-      renderFlipModule();
-    }
-
-    // ====== EVENTS ======
-    betForm.addEventListener("submit", e => {
-      e.preventDefault();
-      const data = getFormData();
-      if (!data.odds || !data.stake) {
-        alert("Odds and stake are required.");
+    // ===== JOURNAL =====
+    function renderJournal() {
+      const list = document.getElementById("journalList");
+      list.innerHTML = "";
+      if (!journal.length) {
+        const li = document.createElement("li");
+        li.textContent = "No entries yet. Capture what you learned after each slate.";
+        list.appendChild(li);
         return;
       }
-
-      const heat = Number(heatLevelSpan.textContent || 0);
-      const disciplineScore = Number(disciplineScoreSpan.textContent || 100);
-      const rec = computeSmartStakeRecommendation(heat, disciplineScore);
-      const unit = Number(settings.unitSize || 0);
-      const stake = Number(data.stake || 0);
-
-      if (rec.maxMult === 0) {
-        if (!confirm("System is in lockdown mode. Are you sure you want to log this play?")) {
-          return;
-        }
-      } else if (unit > 0 && stake > rec.maxMult * unit) {
-        if (!confirm("Stake is above suggested max for current state. Continue anyway?")) {
-          return;
-        }
-      }
-
-      pushUndoSnapshot();
-
-      if (editingBetId !== null) {
-        const bet = bets.find(b => b.id === editingBetId);
-        if (!bet) return;
-        Object.assign(bet, data);
-        bet.sessionId = settings.sessionId;
-        bet.sessionLabel = settings.sessionLabel;
-        bet.status = bet.status || "Active";
-        bet.net = calculateNet(bet.result, bet.stake, bet.odds, bet.status);
-        evaluateRuleBreaks(bet);
-      } else {
-        const newBet = {
-          id: generateBetId(),
-          ...data,
-          sessionId: settings.sessionId,
-          sessionLabel: settings.sessionLabel,
-          status: "Active",
-          createdAt: new Date().toISOString(),
-          ruleBreaks: []
-        };
-        newBet.net = calculateNet(
-          newBet.result,
-          newBet.stake,
-          newBet.odds,
-          newBet.status
-        );
-        evaluateRuleBreaks(newBet);
-        bets.push(newBet);
-      }
-
-      saveState();
-      renderBetsTable();
-      renderDashboard();
-      cancelEdit();
-    });
-
-    cancelEditBtn.addEventListener("click", cancelEdit);
-
-    startSessionBtn.addEventListener("click", () => {
-      openContractModal();
-    });
-
-    saveBankrollBtn.addEventListener("click", () => {
-      settings.bankroll = Number(currentBankrollInput.value) || 0;
-      settings.sessionBankroll = Number(sessionBankrollInput.value) || 0;
-      settings.dailyTarget = Number(dailyTargetInput.value) || 0;
-      settings.maxLoss = Number(maxLossInput.value) || 0;
-      settings.unitSize = Number(unitSizeInput.value) || Math.round(settings.bankroll * 0.02) || 0;
-      unitSizeInput.value = settings.unitSize || "";
-      saveState();
-      renderDashboard();
-    });
-
-    audioToggle.addEventListener("change", () => {
-      settings.audioEnabled = audioToggle.checked;
-      saveState();
-    });
-
-    speakRecapBtn.addEventListener("click", () => {
-      const today = todayString();
-      const activeToday = bets.filter(
-        b => b.status === "Active" && b.date === today
-      );
-      const betsToday = activeToday.length;
-      const dailyNet = activeToday.reduce((sum, b) => sum + b.net, 0);
-      const heat = heatLevelSpan.textContent || "0";
-      const disciplineScore = Number(disciplineScoreSpan.textContent || 100);
-
-      const traps = computeTraps();
-      const trapText =
-        traps.length === 0
-          ? "No active traps detected."
-          : traps.map(t => t.message).join(" ");
-
-      const recap = `Session ${settings.sessionLabel || settings.sessionId || "not set"}. 
-      Plays today: ${betsToday}. 
-      Daily profit or loss: ${dailyNet.toFixed(2)}. 
-      Current heat level: ${heat}. 
-      Discipline score: ${disciplineScore.toFixed(0)} out of 100. 
-      ${trapText}`;
-
-      speak(recap);
-    });
-
-    sessionReplayBtn.addEventListener("click", openReplayModal);
-    replayCloseBtn.addEventListener("click", closeReplayModal);
-    replayModal.addEventListener("click", e => {
-      if (e.target === replayModal) closeReplayModal();
-    });
-
-    if (logFilterSelect) {
-      logFilterSelect.addEventListener("change", () => {
-        renderBetsTable();
+      const sorted = journal.slice().sort((a,b) => new Date(b.datetime) - new Date(a.datetime)).slice(0,20);
+      sorted.forEach(e => {
+        const li = document.createElement("li");
+        li.textContent = `${new Date(e.datetime).toLocaleString()} – ${e.text}`;
+        list.appendChild(li);
       });
     }
 
-    if (exportBetsBtn) {
-      exportBetsBtn.addEventListener("click", exportBetsCSV);
-    }
-
-    if (resetBetsBtn) {
-      resetBetsBtn.addEventListener("click", resetBets);
-    }
-
-    if (undoBtn) {
-      undoBtn.addEventListener("click", undoLast);
-    }
-
-    unitButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        const mult = Number(btn.dataset.mult || 1);
-        const base = Number(settings.unitSize || 0) || 10;
-        document.getElementById("betStake").value = (base * mult).toFixed(2);
-      });
-    });
-
-    emotionLevelInput.addEventListener("change", () => {
-      const label = getEmotionLabel(emotionLevelInput.value);
-      if (!document.getElementById("betEmotion").value) {
-        document.getElementById("betEmotion").value = label;
-      }
-    });
-
-    modeSelect.addEventListener("change", updateOpponentAdvice);
-    document.getElementById("betMarket").addEventListener("input", updateOpponentAdvice);
-
-    initFlipBtn.addEventListener("click", initFlipChallenge);
-    saveFlipResultBtn.addEventListener("click", saveFlipOutcome);
-    exportFlipBtn.addEventListener("click", exportFlipCSV);
-    resetFlipBtn.addEventListener("click", resetFlipHistory);
-
-    contractCancelBtn.addEventListener("click", closeContractModal);
-    contractStartBtn.addEventListener("click", () => {
-      if (!contractCheckbox.checked) {
-        alert("You must accept the contract before starting the session.");
-        return;
-      }
-      closeContractModal();
-      startNewSession();
-    });
-
-    saveJournalBtn.addEventListener("click", saveJournalEntry);
-
-    recordCashoutBtn.addEventListener("click", () => recordCashEvent("cashout"));
-    recordDepositBtn.addEventListener("click", () => recordCashEvent("deposit"));
-
-    // ====== INIT ======
-    function init() {
-      loadState();
-      document.getElementById("betDate").value = todayString();
-      computePatternSummary();
-      renderBetsTable();
-      renderDashboard();
-      renderFlipModule();
+    function saveJournal() {
+      const text = document.getElementById("journalInput").value.trim();
+      if (!text) return;
+      journal.push({ datetime: new Date().toISOString(), text });
+      document.getElementById("journalInput").value = "";
+      saveState();
       renderJournal();
-      renderCashouts();
-
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("sw.js").catch(() => {});
-      }
     }
 
-    document.addEventListener("DOMContentLoaded", init);
+    // ===== NAV =====
+    function setupNav() {
+      const tabs = document.querySelectorAll(".nav-tab");
+      const views = {
+        console: document.getElementById("view-console"),
+        flip: document.getElementById("view-flip"),
+        journal: document.getElementById("view-journal")
+      };
+      tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+          const target = tab.dataset.view;
+          tabs.forEach(t => t.classList.remove("active"));
+          tab.classList.add("active");
+          Object.keys(views).forEach(key => {
+            views[key].classList.toggle("active", key === target);
+          });
+        });
+      });
+    }
+
+    // ===== INIT =====
+    (function init() {
+      // clear any old service workers that might cache stale JS/HTML
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.getRegistrations()
+          .then(regs => regs.forEach(r => r.unregister()))
+          .catch(() => {});
+      }
+
+      loadState();
+
+      // initial form date/time
+      document.getElementById("betDate").value = todayStr();
+      document.getElementById("betTime").value = new Date().toTimeString().slice(0,5);
+
+      // events
+      document.getElementById("saveSettingsBtn").addEventListener("click", saveSettings);
+      document.getElementById("resetTodayBtn").addEventListener("click", resetToday);
+      document.getElementById("resetAllBtn").addEventListener("click", resetAllHistory);
+      document.getElementById("exportCsvBtn").addEventListener("click", exportBetsCsv);
+
+      document.getElementById("betForm").addEventListener("submit", handleBetSubmit);
+      document.getElementById("cancelEditBtn").addEventListener("click", clearBetForm);
+
+      document.querySelectorAll(".unit-buttons .btn").forEach(btn => {
+        const mult = parseFloat(btn.dataset.unit);
+        btn.addEventListener("click", () => handleUnitButtonClick(mult));
+      });
+
+      document.getElementById("initFlipBtn").addEventListener("click", initFlip);
+      document.getElementById("saveFlipBtn").addEventListener("click", saveFlipResult);
+      document.getElementById("exportFlipCsvBtn").addEventListener("click", exportFlipCsv);
+
+      document.getElementById("saveJournalBtn").addEventListener("click", saveJournal);
+
+      setupNav();
+      renderDashboard();
+      renderBetsTable();
+      renderFlip();
+      renderJournal();
+    })();
   </script>
 </body>
 </html>
