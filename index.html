@@ -16,8 +16,12 @@
 
     body {
       margin: 0;
-      background: #050810;
-      color: #f5f5f5;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, #0f172a 0, transparent 55%),
+        radial-gradient(circle at bottom right, #022c22 0, transparent 55%),
+        #020617;
+      color: #f9fafb;
     }
 
     .app {
@@ -48,6 +52,11 @@
       margin-bottom: 1rem;
       border-bottom: 1px solid #111827;
       padding-bottom: 0.25rem;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: linear-gradient(180deg, #020617 0%, #050810 100%);
+      padding-top: 0.25rem;
     }
 
     .nav-tab {
@@ -72,12 +81,15 @@
     /* Cards */
 
     .card {
-      background: #0b0f1c;
-      border-radius: 16px;
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 1.25rem;
-      border: 1px solid #1f2937;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      background: rgba(15, 23, 42, 0.92);
+      border-radius: 18px;
+      padding: 1.15rem 1.25rem;
+      margin-bottom: 1.1rem;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.7),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(10px);
     }
 
     .card h2 {
@@ -365,6 +377,20 @@
       color: #fb7185;
     }
 
+    /* Scroll cards to avoid endless page scroll */
+    .scroll-card {
+      max-height: 65vh;
+      overflow-y: auto;
+    }
+
+    .scroll-card h2,
+    .scroll-card .bets-log-controls {
+      position: sticky;
+      top: 0;
+      background: inherit;
+      z-index: 5;
+    }
+
     /* 10 Flip */
     .flip-grid {
       display: grid;
@@ -430,6 +456,42 @@
       gap: 0.4rem;
       flex-wrap: wrap;
     }
+
+    /* Mobile tweaks */
+    @media (max-width: 768px) {
+      .app {
+        padding: 0.75rem;
+      }
+
+      .app-header h1 {
+        font-size: 1.4rem;
+      }
+
+      .card {
+        padding: 0.9rem 0.9rem;
+        border-radius: 16px;
+      }
+
+      .dashboard-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
+      }
+
+      .dash-item {
+        padding: 0.5rem 0.55rem;
+      }
+
+      .bets-log-controls {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      table th,
+      table td {
+        padding: 0.35rem 0.3rem;
+        font-size: 0.75rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -450,7 +512,7 @@
       <!-- DASHBOARD -->
       <section class="card">
         <div class="card-header-row">
-          <h2>Dashboard</h2>
+          <h2>📊 Dashboard</h2>
           <div class="audio-controls">
             <label>
               <input type="checkbox" id="audioToggle" />
@@ -513,7 +575,7 @@
 
       <!-- PLAYBOOK & COMBOS -->
       <section class="card">
-        <h2>Controlled Outputs (Phase 2)</h2>
+        <h2>🎯 Controlled Outputs (Phase 2)</h2>
         <div class="playbook-grid">
           <div class="playbook-block">
             <h3>3-Bet Controlled Playbook</h3>
@@ -530,7 +592,7 @@
 
       <!-- TRAPS & ALERTS -->
       <section class="card">
-        <h2>Traps & Alerts</h2>
+        <h2>⚠️ Traps & Alerts</h2>
         <p class="subtext">Live scan of your behavior today.</p>
         <ul id="trapList" class="alert-list"></ul>
         <p id="noTrapsMsg" class="subtext muted"></p>
@@ -603,7 +665,7 @@
       </section>
 
       <!-- BET TABLE -->
-      <section class="card">
+      <section class="card scroll-card">
         <h2>Bets Log</h2>
 
         <div class="bets-log-controls">
@@ -649,7 +711,7 @@
     <!-- VIEW: 10 FLIP MODULE -->
     <div class="view" data-view="flip">
       <section class="card">
-        <h2>10 Flip Challenge</h2>
+        <h2>🔁 10 Flip Challenge</h2>
         <p class="subtext">
           Set your starting bankroll and target multiplier (e.g., 2x), then log each flip's result.
           The module tracks up to 10 flips and saves in your browser.
@@ -687,7 +749,7 @@
         </div>
       </section>
 
-      <section class="card">
+      <section class="card scroll-card">
         <h2>Flip History</h2>
         <p class="subtext">Track each flip's start, target, result, and status.</p>
 
