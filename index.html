@@ -734,6 +734,97 @@
         <p id="sessionStatusText" class="subtext muted"></p>
       </section>
 
+      <!-- LOG A PLAY (directly after dashboard) -->
+      <section class="card">
+        <h2 id="formTitle">Log a Play</h2>
+        <form id="betForm" novalidate>
+          <div class="form-grid">
+            <div class="form-item">
+              <label>Date</label>
+              <input type="date" id="betDate" required />
+            </div>
+            <div class="form-item">
+              <label>Time</label>
+              <input type="time" id="betTime" required />
+            </div>
+            <div class="form-item">
+              <label>Sport</label>
+              <input type="text" id="betSport" placeholder="NBA, NFL..." />
+            </div>
+            <div class="form-item">
+              <label>Market</label>
+              <input type="text" id="betMarket" placeholder="Spread, Total, PRA..." />
+            </div>
+            <div class="form-item">
+              <label>Description</label>
+              <input type="text" id="betDescription" placeholder="Lakers -3.5, Tatum o27.5..." />
+            </div>
+            <div class="form-item">
+              <label>Odds (American)</label>
+              <input type="number" id="betOdds" step="0.01" required />
+            </div>
+            <div class="form-item">
+              <label>Stake</label>
+              <input type="number" id="betStake" step="0.01" min="0" required />
+              <div class="unit-buttons">
+                <button type="button" class="btn btn-secondary btn-sm unit-btn" data-mult="0.5">0.5U</button>
+                <button type="button" class="btn btn-secondary btn-sm unit-btn" data-mult="1">1U</button>
+                <button type="button" class="btn btn-secondary btn-sm unit-btn" data-mult="2">2U</button>
+              </div>
+              <div id="smartStakeText" class="smart-stake-text"></div>
+            </div>
+            <div class="form-item">
+              <label>Result</label>
+              <select id="betResult">
+                <option value="Pending">Pending</option>
+                <option value="Win">Win</option>
+                <option value="Loss">Loss</option>
+                <option value="Push">Push</option>
+              </select>
+            </div>
+            <div class="form-item">
+              <label>Risk Tag</label>
+              <select id="betRiskTag">
+                <option value="Safe">Safe</option>
+                <option value="Standard" selected>Standard</option>
+                <option value="Aggressive">Aggressive</option>
+              </select>
+            </div>
+            <div class="form-item">
+              <label>Confidence (1-5)</label>
+              <input type="number" id="betConfidence" min="1" max="5" value="3" />
+            </div>
+            <div class="form-item emotion-slider-wrap">
+              <label>Emotion Level</label>
+              <input type="range" id="emotionLevel" min="1" max="4" value="2" />
+              <div class="emotion-labels">
+                <span>Calm</span>
+                <span>Locked-In</span>
+                <span>Anxious</span>
+                <span>Tilted</span>
+              </div>
+            </div>
+            <div class="form-item">
+              <label>Emotion Tag (optional words)</label>
+              <input type="text" id="betEmotion" placeholder="Calm, Tilted, Locked-in..." />
+            </div>
+            <div class="form-item">
+              <label>Mode</label>
+              <select id="modeSelect">
+                <option value="standard">Standard</option>
+                <option value="fade">Fade Mode</option>
+                <option value="green">Green Zone</option>
+              </select>
+              <div id="opponentAdvice" class="opponent-note"></div>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="submitBetBtn">Save Play</button>
+            <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display:none;">Cancel Edit</button>
+          </div>
+        </form>
+      </section>
+
       <!-- PLAYBOOK & COMBOS -->
       <section class="card">
         <h2>🎯 Controlled Outputs (Phase 3)</h2>
@@ -820,97 +911,6 @@
             <tbody></tbody>
           </table>
         </div>
-      </section>
-
-      <!-- BET ENTRY FORM -->
-      <section class="card">
-        <h2 id="formTitle">Log a Play</h2>
-        <form id="betForm">
-          <div class="form-grid">
-            <div class="form-item">
-              <label>Date</label>
-              <input type="date" id="betDate" required />
-            </div>
-            <div class="form-item">
-              <label>Time</label>
-              <input type="time" id="betTime" required />
-            </div>
-            <div class="form-item">
-              <label>Sport</label>
-              <input type="text" id="betSport" placeholder="NBA, NFL..." />
-            </div>
-            <div class="form-item">
-              <label>Market</label>
-              <input type="text" id="betMarket" placeholder="Spread, Total, PRA..." />
-            </div>
-            <div class="form-item">
-              <label>Description</label>
-              <input type="text" id="betDescription" placeholder="Lakers -3.5, Tatum o27.5..." />
-            </div>
-            <div class="form-item">
-              <label>Odds (American)</label>
-              <input type="number" id="betOdds" step="0.01" required />
-            </div>
-            <div class="form-item">
-              <label>Stake</label>
-              <input type="number" id="betStake" step="0.01" min="0" required />
-              <div class="unit-buttons">
-                <button type="button" class="btn btn-secondary btn-sm unit-btn" data-mult="0.5">0.5U</button>
-                <button type="button" class="btn btn-secondary btn-sm unit-btn" data-mult="1">1U</button>
-                <button type="button" class="btn btn-secondary btn-sm unit-btn" data-mult="2">2U</button>
-              </div>
-              <div id="smartStakeText" class="smart-stake-text"></div>
-            </div>
-            <div class="form-item">
-              <label>Result</label>
-              <select id="betResult">
-                <option value="Pending">Pending</option>
-                <option value="Win">Win</option>
-                <option value="Loss">Loss</option>
-                <option value="Push">Push</option>
-              </select>
-            </div>
-            <div class="form-item">
-              <label>Risk Tag</label>
-              <select id="betRiskTag">
-                <option value="Safe">Safe</option>
-                <option value="Standard" selected>Standard</option>
-                <option value="Aggressive">Aggressive</option>
-              </select>
-            </div>
-            <div class="form-item">
-              <label>Confidence (1-5)</label>
-              <input type="number" id="betConfidence" min="1" max="5" value="3" />
-            </div>
-            <div class="form-item emotion-slider-wrap">
-              <label>Emotion Level</label>
-              <input type="range" id="emotionLevel" min="1" max="4" value="2" />
-              <div class="emotion-labels">
-                <span>Calm</span>
-                <span>Locked-In</span>
-                <span>Anxious</span>
-                <span>Tilted</span>
-              </div>
-            </div>
-            <div class="form-item">
-              <label>Emotion Tag (optional words)</label>
-              <input type="text" id="betEmotion" placeholder="Calm, Tilted, Locked-in..." />
-            </div>
-            <div class="form-item">
-              <label>Mode</label>
-              <select id="modeSelect">
-                <option value="standard">Standard</option>
-                <option value="fade">Fade Mode</option>
-                <option value="green">Green Zone</option>
-              </select>
-              <div id="opponentAdvice" class="opponent-note"></div>
-            </div>
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary" id="submitBetBtn">Save Play</button>
-            <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display:none;">Cancel Edit</button>
-          </div>
-        </form>
       </section>
 
       <!-- BET TABLE -->
@@ -2140,6 +2140,8 @@
       submitBetBtn.textContent = "Update Play";
       cancelEditBtn.style.display = "inline-block";
       setFormData(bet);
+      // scroll up to form
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function cancelEdit() {
