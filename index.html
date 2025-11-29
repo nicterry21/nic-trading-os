@@ -5,7 +5,6 @@
   <title>A-T Trading Console – Phase 2</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#050810" />
-  <!-- Keep / adjust this if you already have a manifest -->
   <link rel="manifest" href="manifest.json" />
 
   <style>
@@ -29,7 +28,7 @@
 
     .app-header {
       text-align: left;
-      margin-bottom: 1.5rem;
+      margin-bottom: 0.75rem;
     }
 
     .app-header h1 {
@@ -40,6 +39,34 @@
     .app-header p {
       margin: 0.3rem 0 0;
       color: #9ca3af;
+    }
+
+    /* Top nav (pages) */
+    .top-nav {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #111827;
+      padding-bottom: 0.25rem;
+    }
+
+    .nav-tab {
+      border: none;
+      background: transparent;
+      color: #9ca3af;
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .nav-tab.active {
+      background: #16a34a;
+      color: #fff;
+    }
+
+    .nav-tab:hover {
+      background: #111827;
     }
 
     /* Cards */
@@ -74,6 +101,15 @@
 
     .subtext.muted {
       opacity: 0.7;
+    }
+
+    /* Views */
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
     }
 
     /* Dashboard */
@@ -145,6 +181,10 @@
 
     .btn-secondary {
       background: #374151;
+    }
+
+    .btn-danger {
+      background: #b91c1c;
     }
 
     .btn-sm {
@@ -324,6 +364,72 @@
     .heat-high {
       color: #fb7185;
     }
+
+    /* 10 Flip */
+    .flip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .flip-item {
+      background: #020617;
+      border-radius: 12px;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid #111827;
+    }
+
+    .flip-item label {
+      display: block;
+      font-size: 0.75rem;
+      color: #9ca3af;
+      margin-bottom: 0.25rem;
+    }
+
+    .flip-item input {
+      width: 100%;
+      padding: 0.35rem 0.45rem;
+      border-radius: 8px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      color: #e5e7eb;
+    }
+
+    .flip-meta {
+      font-size: 0.8rem;
+      margin-bottom: 0.5rem;
+      color: #e5e7eb;
+    }
+
+    .flip-meta span {
+      display: block;
+      margin-bottom: 0.15rem;
+    }
+
+    .bets-log-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .bets-log-controls select {
+      padding: 0.3rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 0.8rem;
+    }
+
+    .bets-log-buttons {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
   </style>
 </head>
 <body>
@@ -333,184 +439,286 @@
       <p>Real-time bankroll, heat, traps, and controlled outputs.</p>
     </header>
 
-    <!-- DASHBOARD -->
-    <section class="card">
-      <div class="card-header-row">
-        <h2>Dashboard</h2>
-        <div class="audio-controls">
-          <label>
-            <input type="checkbox" id="audioToggle" />
-            Audio Coach
-          </label>
-          <button id="speakRecapBtn" class="btn btn-secondary btn-sm">
-            Speak Session Recap
+    <!-- Top Nav / Pages -->
+    <nav class="top-nav">
+      <button class="nav-tab active" data-target="console">Console</button>
+      <button class="nav-tab" data-target="flip">10 Flip Challenge</button>
+    </nav>
+
+    <!-- VIEW: CONSOLE -->
+    <div class="view active" data-view="console">
+      <!-- DASHBOARD -->
+      <section class="card">
+        <div class="card-header-row">
+          <h2>Dashboard</h2>
+          <div class="audio-controls">
+            <label>
+              <input type="checkbox" id="audioToggle" />
+              Audio Coach
+            </label>
+            <button id="speakRecapBtn" class="btn btn-secondary btn-sm">
+              Speak Session Recap
+            </button>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="dash-item">
+            <label>Current Bankroll</label>
+            <input type="number" id="currentBankroll" />
+          </div>
+          <div class="dash-item">
+            <label>Starting Bankroll (Session)</label>
+            <input type="number" id="sessionBankroll" />
+          </div>
+          <div class="dash-item">
+            <span class="label">Daily P/L</span>
+            <span id="dailyPL" class="value"></span>
+          </div>
+          <div class="dash-item">
+            <span class="label">Total P/L</span>
+            <span id="totalPL" class="value"></span>
+          </div>
+          <div class="dash-item">
+            <span class="label">Win Rate (All-Time)</span>
+            <span id="winRate" class="value"></span>
+          </div>
+          <div class="dash-item">
+            <span class="label">Bets Today</span>
+            <span id="betsToday" class="value"></span>
+          </div>
+          <div class="dash-item">
+            <span class="label">Heat Level</span>
+            <span id="heatLevel" class="value heat"></span>
+          </div>
+          <div class="dash-item">
+            <span class="label">Session ID</span>
+            <span id="sessionId" class="value"></span>
+          </div>
+          <div class="dash-item">
+            <span class="label">Session P/L</span>
+            <span id="sessionPL" class="value"></span>
+          </div>
+          <div class="dash-item">
+            <span class="label">Session Bets</span>
+            <span id="sessionBets" class="value"></span>
+          </div>
+        </div>
+
+        <div class="dashboard-actions">
+          <button id="startSessionBtn" class="btn btn-primary">Start New Session</button>
+          <button id="saveBankrollBtn" class="btn">Save Bankroll</button>
+        </div>
+      </section>
+
+      <!-- PLAYBOOK & COMBOS -->
+      <section class="card">
+        <h2>Controlled Outputs (Phase 2)</h2>
+        <div class="playbook-grid">
+          <div class="playbook-block">
+            <h3>3-Bet Controlled Playbook</h3>
+            <p class="subtext">Top 3 pending plays ranked by edge & discipline.</p>
+            <ol id="playbook3List" class="list"></ol>
+          </div>
+          <div class="playbook-block">
+            <h3>2-Leg Combos</h3>
+            <p class="subtext">Best 2-leg combinations from your pending pool.</p>
+            <ol id="combosList" class="list"></ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRAPS & ALERTS -->
+      <section class="card">
+        <h2>Traps & Alerts</h2>
+        <p class="subtext">Live scan of your behavior today.</p>
+        <ul id="trapList" class="alert-list"></ul>
+        <p id="noTrapsMsg" class="subtext muted"></p>
+      </section>
+
+      <!-- BET ENTRY FORM -->
+      <section class="card">
+        <h2 id="formTitle">Log Bet</h2>
+        <form id="betForm">
+          <div class="form-grid">
+            <div class="form-item">
+              <label>Date</label>
+              <input type="date" id="betDate" required />
+            </div>
+            <div class="form-item">
+              <label>Time</label>
+              <input type="time" id="betTime" required />
+            </div>
+            <div class="form-item">
+              <label>Sport</label>
+              <input type="text" id="betSport" placeholder="NBA, NFL..." />
+            </div>
+            <div class="form-item">
+              <label>Market</label>
+              <input type="text" id="betMarket" placeholder="Spread, Total, PRA..." />
+            </div>
+            <div class="form-item">
+              <label>Description</label>
+              <input type="text" id="betDescription" placeholder="Lakers -3.5, Tatum o27.5..." />
+            </div>
+            <div class="form-item">
+              <label>Odds (American)</label>
+              <input type="number" id="betOdds" required />
+            </div>
+            <div class="form-item">
+              <label>Stake</label>
+              <input type="number" id="betStake" required />
+            </div>
+            <div class="form-item">
+              <label>Result</label>
+              <select id="betResult">
+                <option value="Pending">Pending</option>
+                <option value="Win">Win</option>
+                <option value="Loss">Loss</option>
+                <option value="Push">Push</option>
+              </select>
+            </div>
+            <div class="form-item">
+              <label>Risk Tag</label>
+              <select id="betRiskTag">
+                <option value="Safe">Safe</option>
+                <option value="Standard" selected>Standard</option>
+                <option value="Aggressive">Aggressive</option>
+              </select>
+            </div>
+            <div class="form-item">
+              <label>Confidence (1-5)</label>
+              <input type="number" id="betConfidence" min="1" max="5" value="3" />
+            </div>
+            <div class="form-item">
+              <label>Emotion Tag</label>
+              <input type="text" id="betEmotion" placeholder="Calm, Tilted, Locked-in..." />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="submitBetBtn">Save Bet</button>
+            <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display:none;">Cancel Edit</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- BET TABLE -->
+      <section class="card">
+        <h2>Bets Log</h2>
+
+        <div class="bets-log-controls">
+          <div>
+            <span class="subtext">Filter:</span>
+            <select id="logFilterSelect">
+              <option value="all">All Bets</option>
+              <option value="today">Today Only</option>
+              <option value="pending">Pending Only</option>
+            </select>
+          </div>
+          <div class="bets-log-buttons">
+            <button id="exportBetsBtn" class="btn btn-secondary btn-sm">Export Bets (CSV)</button>
+            <button id="resetBetsBtn" class="btn btn-danger btn-sm">Reset Bets</button>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table id="betsTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Sport</th>
+                <th>Market</th>
+                <th>Description</th>
+                <th>Odds</th>
+                <th>Stake</th>
+                <th>Result</th>
+                <th>Risk</th>
+                <th>Net</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- VIEW: 10 FLIP MODULE -->
+    <div class="view" data-view="flip">
+      <section class="card">
+        <h2>10 Flip Challenge</h2>
+        <p class="subtext">
+          Set your starting bankroll and target multiplier (e.g., 2x), then log each flip's result.
+          The module tracks up to 10 flips and saves in your browser.
+        </p>
+
+        <div class="flip-grid">
+          <div class="flip-item">
+            <label>Starting Bankroll</label>
+            <input type="number" id="flipStartBankroll" />
+          </div>
+          <div class="flip-item">
+            <label>Target Multiplier per Flip</label>
+            <input type="number" id="flipMultiplier" step="0.1" value="2" />
+          </div>
+          <div class="flip-item">
+            <label>Total Flips</label>
+            <input type="number" id="flipTotal" value="10" />
+          </div>
+        </div>
+
+        <button id="initFlipBtn" class="btn btn-primary">Initialize / Reset Challenge</button>
+
+        <div class="card" style="margin-top: 1rem; background:#020617;">
+          <h3 style="margin-top:0;">Current Flip</h3>
+          <div class="flip-meta" id="flipMeta">
+            <!-- populated by JS -->
+          </div>
+          <div class="flip-item">
+            <label>Result After This Flip (Bankroll)</label>
+            <input type="number" id="flipResultInput" />
+          </div>
+          <button id="saveFlipResultBtn" class="btn btn-secondary" style="margin-top:0.5rem;">
+            Save Flip Outcome
           </button>
         </div>
-      </div>
+      </section>
 
-      <div class="dashboard-grid">
-        <div class="dash-item">
-          <label>Current Bankroll</label>
-          <input type="number" id="currentBankroll" />
-        </div>
-        <div class="dash-item">
-          <label>Starting Bankroll (Session)</label>
-          <input type="number" id="sessionBankroll" />
-        </div>
-        <div class="dash-item">
-          <span class="label">Daily P/L</span>
-          <span id="dailyPL" class="value"></span>
-        </div>
-        <div class="dash-item">
-          <span class="label">Total P/L</span>
-          <span id="totalPL" class="value"></span>
-        </div>
-        <div class="dash-item">
-          <span class="label">Win Rate (All-Time)</span>
-          <span id="winRate" class="value"></span>
-        </div>
-        <div class="dash-item">
-          <span class="label">Bets Today</span>
-          <span id="betsToday" class="value"></span>
-        </div>
-        <div class="dash-item">
-          <span class="label">Heat Level</span>
-          <span id="heatLevel" class="value heat"></span>
-        </div>
-        <div class="dash-item">
-          <span class="label">Session ID</span>
-          <span id="sessionId" class="value"></span>
-        </div>
-      </div>
+      <section class="card">
+        <h2>Flip History</h2>
+        <p class="subtext">Track each flip's start, target, result, and status.</p>
 
-      <div class="dashboard-actions">
-        <button id="startSessionBtn" class="btn btn-primary">Start New Session</button>
-        <button id="saveBankrollBtn" class="btn">Save Bankroll</button>
-      </div>
-    </section>
-
-    <!-- PLAYBOOK & COMBOS -->
-    <section class="card">
-      <h2>Controlled Outputs (Phase 2)</h2>
-      <div class="playbook-grid">
-        <div class="playbook-block">
-          <h3>3-Bet Controlled Playbook</h3>
-          <p class="subtext">Top 3 pending plays ranked by edge & discipline.</p>
-          <ol id="playbook3List" class="list"></ol>
-        </div>
-        <div class="playbook-block">
-          <h3>2-Leg Combos</h3>
-          <p class="subtext">Best 2-leg combinations from your pending pool.</p>
-          <ol id="combosList" class="list"></ol>
-        </div>
-      </div>
-    </section>
-
-    <!-- TRAPS & ALERTS -->
-    <section class="card">
-      <h2>Traps & Alerts</h2>
-      <p class="subtext">Live scan of your behavior today.</p>
-      <ul id="trapList" class="alert-list"></ul>
-      <p id="noTrapsMsg" class="subtext muted"></p>
-    </section>
-
-    <!-- BET ENTRY FORM -->
-    <section class="card">
-      <h2 id="formTitle">Log Bet</h2>
-      <form id="betForm">
-        <div class="form-grid">
-          <div class="form-item">
-            <label>Date</label>
-            <input type="date" id="betDate" required />
-          </div>
-          <div class="form-item">
-            <label>Time</label>
-            <input type="time" id="betTime" required />
-          </div>
-          <div class="form-item">
-            <label>Sport</label>
-            <input type="text" id="betSport" placeholder="NBA, NFL..." />
-          </div>
-          <div class="form-item">
-            <label>Market</label>
-            <input type="text" id="betMarket" placeholder="Spread, Total, PRA..." />
-          </div>
-          <div class="form-item">
-            <label>Description</label>
-            <input type="text" id="betDescription" placeholder="Lakers -3.5, Tatum o27.5..." />
-          </div>
-          <div class="form-item">
-            <label>Odds (American)</label>
-            <input type="number" id="betOdds" required />
-          </div>
-          <div class="form-item">
-            <label>Stake</label>
-            <input type="number" id="betStake" required />
-          </div>
-          <div class="form-item">
-            <label>Result</label>
-            <select id="betResult">
-              <option value="Pending">Pending</option>
-              <option value="Win">Win</option>
-              <option value="Loss">Loss</option>
-              <option value="Push">Push</option>
-            </select>
-          </div>
-          <div class="form-item">
-            <label>Risk Tag</label>
-            <select id="betRiskTag">
-              <option value="Safe">Safe</option>
-              <option value="Standard" selected>Standard</option>
-              <option value="Aggressive">Aggressive</option>
-            </select>
-          </div>
-          <div class="form-item">
-            <label>Confidence (1-5)</label>
-            <input type="number" id="betConfidence" min="1" max="5" value="3" />
-          </div>
-          <div class="form-item">
-            <label>Emotion Tag</label>
-            <input type="text" id="betEmotion" placeholder="Calm, Tilted, Locked-in..." />
+        <div class="bets-log-controls">
+          <span class="subtext">History Controls:</span>
+          <div class="bets-log-buttons">
+            <button id="exportFlipBtn" class="btn btn-secondary btn-sm">Export Flips (CSV)</button>
+            <button id="resetFlipBtn" class="btn btn-danger btn-sm">Reset Flip History</button>
           </div>
         </div>
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary" id="submitBetBtn">Save Bet</button>
-          <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display:none;">Cancel Edit</button>
-        </div>
-      </form>
-    </section>
 
-    <!-- BET TABLE -->
-    <section class="card">
-      <h2>Bets Log</h2>
-      <div class="table-wrapper">
-        <table id="betsTable">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Sport</th>
-              <th>Market</th>
-              <th>Description</th>
-              <th>Odds</th>
-              <th>Stake</th>
-              <th>Result</th>
-              <th>Risk</th>
-              <th>Net</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
+        <div class="table-wrapper">
+          <table id="flipTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Start</th>
+                <th>Target</th>
+                <th>Result</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
   </div>
 
   <script>
-    // A-T Trading Console – Phase 2 Engine (single-file version)
-
+    // ====== GLOBAL STATE ======
     let bets = [];
     let settings = {
       bankroll: 0,
@@ -519,27 +727,35 @@
       audioEnabled: false
     };
 
+    let flipState = {
+      startingBankroll: 0,
+      multiplier: 2,
+      totalFlips: 10,
+      currentFlip: 1,
+      history: [] // {flip, start, target, result, status}
+    };
+
     let editingBetId = null;
     let lastHeatLevel = 0;
     let lastTrapKeys = [];
 
-    // ---- Storage ----
+    // ====== STORAGE ======
     function loadState() {
       const storedBets = localStorage.getItem("at_bets");
       const storedSettings = localStorage.getItem("at_settings");
-      if (storedBets) {
-        bets = JSON.parse(storedBets);
-      }
-      if (storedSettings) {
-        settings = JSON.parse(storedSettings);
-      }
+      const storedFlip = localStorage.getItem("at_flip");
+      if (storedBets) bets = JSON.parse(storedBets);
+      if (storedSettings) settings = JSON.parse(storedSettings);
+      if (storedFlip) flipState = JSON.parse(storedFlip);
     }
 
     function saveState() {
       localStorage.setItem("at_bets", JSON.stringify(bets));
       localStorage.setItem("at_settings", JSON.stringify(settings));
+      localStorage.setItem("at_flip", JSON.stringify(flipState));
     }
 
+    // ====== HELPERS ======
     function generateBetId() {
       return bets.length ? Math.max(...bets.map(b => b.id)) + 1 : 1;
     }
@@ -559,11 +775,8 @@
       if (result === "Push") return 0;
       if (result === "Loss") return -stake;
       if (result === "Win") {
-        if (odds > 0) {
-          return (stake * odds) / 100;
-        } else {
-          return (stake * 100) / Math.abs(odds);
-        }
+        if (odds > 0) return (stake * odds) / 100;
+        return (stake * 100) / Math.abs(odds);
       }
       return 0;
     }
@@ -578,7 +791,12 @@
       return hh + (isNaN(mm) ? 0 : mm / 60);
     }
 
-    // ---- Audio ----
+    function csvEscape(value) {
+      const str = String(value ?? "");
+      return '"' + str.replace(/"/g, '""') + '"';
+    }
+
+    // ====== AUDIO ======
     function speak(text) {
       if (!settings.audioEnabled) return;
       if (!window.speechSynthesis) return;
@@ -589,7 +807,7 @@
       window.speechSynthesis.speak(utter);
     }
 
-    // ---- UI References ----
+    // ====== DOM REFS ======
     const currentBankrollInput = document.getElementById("currentBankroll");
     const sessionBankrollInput = document.getElementById("sessionBankroll");
     const dailyPLSpan = document.getElementById("dailyPL");
@@ -598,6 +816,8 @@
     const betsTodaySpan = document.getElementById("betsToday");
     const heatLevelSpan = document.getElementById("heatLevel");
     const sessionIdSpan = document.getElementById("sessionId");
+    const sessionPLSpan = document.getElementById("sessionPL");
+    const sessionBetsSpan = document.getElementById("sessionBets");
 
     const startSessionBtn = document.getElementById("startSessionBtn");
     const saveBankrollBtn = document.getElementById("saveBankrollBtn");
@@ -608,24 +828,73 @@
     const cancelEditBtn = document.getElementById("cancelEditBtn");
 
     const betsTableBody = document.querySelector("#betsTable tbody");
-
     const playbook3List = document.getElementById("playbook3List");
     const combosList = document.getElementById("combosList");
-
     const trapList = document.getElementById("trapList");
     const noTrapsMsg = document.getElementById("noTrapsMsg");
-
     const audioToggle = document.getElementById("audioToggle");
     const speakRecapBtn = document.getElementById("speakRecapBtn");
+    const logFilterSelect = document.getElementById("logFilterSelect");
+    const exportBetsBtn = document.getElementById("exportBetsBtn");
+    const resetBetsBtn = document.getElementById("resetBetsBtn");
 
-    // ---- Rendering: Bets Table ----
+    // 10 flip refs
+    const flipStartBankrollInput = document.getElementById("flipStartBankroll");
+    const flipMultiplierInput = document.getElementById("flipMultiplier");
+    const flipTotalInput = document.getElementById("flipTotal");
+    const flipMetaDiv = document.getElementById("flipMeta");
+    const flipResultInput = document.getElementById("flipResultInput");
+    const flipTableBody = document.querySelector("#flipTable tbody");
+    const initFlipBtn = document.getElementById("initFlipBtn");
+    const saveFlipResultBtn = document.getElementById("saveFlipResultBtn");
+    const exportFlipBtn = document.getElementById("exportFlipBtn");
+    const resetFlipBtn = document.getElementById("resetFlipBtn");
+
+    // ====== NAV (VIEWS) ======
+    const navTabs = document.querySelectorAll(".nav-tab");
+    const views = document.querySelectorAll(".view");
+
+    function showView(name) {
+      views.forEach(v => {
+        if (v.getAttribute("data-view") === name) v.classList.add("active");
+        else v.classList.remove("active");
+      });
+      navTabs.forEach(t => {
+        if (t.getAttribute("data-target") === name) t.classList.add("active");
+        else t.classList.remove("active");
+      });
+    }
+
+    navTabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        const target = tab.getAttribute("data-target");
+        showView(target);
+      });
+    });
+
+    // ====== BETS TABLE ======
+    function getFilteredBetsForTable() {
+      const filter = logFilterSelect ? logFilterSelect.value : "all";
+      const today = todayString();
+
+      return [...bets].filter(b => {
+        if (filter === "today") {
+          return b.date === today;
+        }
+        if (filter === "pending") {
+          return b.status === "Active" && b.result === "Pending";
+        }
+        return true; // all
+      });
+    }
+
     function renderBetsTable() {
       betsTableBody.innerHTML = "";
-      const sorted = [...bets].sort((a, b) => a.id - b.id);
+      const filtered = getFilteredBetsForTable();
+      const sorted = filtered.sort((a, b) => a.id - b.id);
 
       for (const bet of sorted) {
         const tr = document.createElement("tr");
-
         const statusClass = bet.status === "Active" ? "status-active" : "status-void";
         const resultClass =
           bet.result === "Win"
@@ -671,7 +940,7 @@
       });
     }
 
-    // ---- Playbook & Combos ----
+    // ====== PLAYBOOK & COMBOS ======
     function riskWeight(riskTag) {
       if (riskTag === "Safe") return 1.5;
       if (riskTag === "Standard") return 1.0;
@@ -692,7 +961,7 @@
     function renderPlaybookAndCombos() {
       const candidates = buildCandidateBets();
 
-      // 3-Bet Controlled Playbook
+      // 3-Bet
       playbook3List.innerHTML = "";
       if (candidates.length === 0) {
         const li = document.createElement("li");
@@ -703,7 +972,6 @@
           const score = (b.confidence || 3) * riskWeight(b.riskTag);
           return { bet: b, score };
         });
-
         scored.sort((a, b) => b.score - a.score);
         const top3 = scored.slice(0, 3);
 
@@ -718,7 +986,7 @@
         }
       }
 
-      // 2-Leg Combos
+      // 2-leg combos
       combosList.innerHTML = "";
       if (candidates.length < 2) {
         const li = document.createElement("li");
@@ -735,17 +1003,13 @@
           const scoreA = (a.confidence || 3) * riskWeight(a.riskTag);
           const scoreB = (b.confidence || 3) * riskWeight(b.riskTag);
           let comboScore = scoreA + scoreB;
-
-          if (a.riskTag === "Aggressive" && b.riskTag === "Aggressive") {
-            comboScore -= 1;
-          }
+          if (a.riskTag === "Aggressive" && b.riskTag === "Aggressive") comboScore -= 1;
           combos.push({ a, b, comboScore });
         }
       }
 
       combos.sort((x, y) => y.comboScore - x.comboScore);
       const topCombos = combos.slice(0, 3);
-
       for (const { a, b, comboScore } of topCombos) {
         const li = document.createElement("li");
         li.textContent = `[#${a.id} + #${b.id}] – ${a.description || ""} + ${
@@ -757,7 +1021,7 @@
       }
     }
 
-    // ---- Traps & Alerts ----
+    // ====== TRAPS ======
     function computeTraps() {
       const traps = [];
       const today = todayString();
@@ -834,7 +1098,7 @@
       lastTrapKeys = trapKeys;
     }
 
-    // ---- Dashboard ----
+    // ====== DASHBOARD ======
     function renderDashboard() {
       currentBankrollInput.value =
         settings.bankroll !== undefined ? settings.bankroll : "";
@@ -873,6 +1137,23 @@
         totalBetsCount === 0 ? 0 : (wins / (wins + losses || 1)) * 100;
       winRateSpan.textContent = `${winRate.toFixed(1)}%`;
 
+      // Session stats
+      let sessionNet = 0;
+      let sessionBetsCount = 0;
+      if (settings.sessionId) {
+        const sessionBetsArr = activeBets.filter(
+          b => b.sessionId === settings.sessionId
+        );
+        for (const b of sessionBetsArr) {
+          sessionNet += b.net;
+          if (b.result === "Win" || b.result === "Loss" || b.result === "Push") {
+            sessionBetsCount++;
+          }
+        }
+      }
+      sessionPLSpan.textContent = sessionNet.toFixed(2);
+      sessionBetsSpan.textContent = sessionBetsCount;
+
       const recentActive = activeBets
         .filter(b => b.date === today)
         .sort((a, b) => b.id - a.id)
@@ -897,7 +1178,7 @@
       renderTraps();
     }
 
-    // ---- Bets CRUD ----
+    // ====== BETS CRUD ======
     function getFormData() {
       return {
         date: document.getElementById("betDate").value || todayString(),
@@ -963,7 +1244,7 @@
       renderDashboard();
     }
 
-    // ---- Session ----
+    // ====== SESSION ======
     function startNewSession() {
       const now = new Date();
       const stamp = now.toISOString().replace(/[-:]/g, "").slice(0, 15);
@@ -974,7 +1255,205 @@
       renderDashboard();
     }
 
-    // ---- Events ----
+    // ====== EXPORT / RESET BETS ======
+    function exportBetsCSV() {
+      if (!bets.length) {
+        alert("No bets to export yet.");
+        return;
+      }
+
+      const headers = [
+        "id",
+        "date",
+        "time",
+        "sport",
+        "market",
+        "description",
+        "odds",
+        "stake",
+        "result",
+        "riskTag",
+        "confidence",
+        "emotion",
+        "net",
+        "status",
+        "sessionId",
+        "createdAt"
+      ];
+
+      const rows = bets.map(b => [
+        b.id,
+        b.date,
+        b.time,
+        b.sport,
+        b.market,
+        b.description,
+        b.odds,
+        b.stake,
+        b.result,
+        b.riskTag,
+        b.confidence,
+        b.emotion,
+        b.net,
+        b.status,
+        b.sessionId,
+        b.createdAt
+      ]);
+
+      const csv =
+        headers.map(csvEscape).join(",") +
+        "\n" +
+        rows.map(r => r.map(csvEscape).join(",")).join("\n");
+
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "at_bets_export.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function resetBets() {
+      if (!confirm("This will delete all bets from this browser. Continue?")) return;
+      bets = [];
+      saveState();
+      renderBetsTable();
+      renderDashboard();
+    }
+
+    // ====== 10 FLIP MODULE ======
+    function currentFlipStart() {
+      if (flipState.currentFlip === 1) return flipState.startingBankroll;
+      const prev = flipState.history.find(h => h.flip === flipState.currentFlip - 1);
+      return prev ? prev.result : flipState.startingBankroll;
+    }
+
+    function currentFlipTarget() {
+      const start = currentFlipStart();
+      return start * flipState.multiplier;
+    }
+
+    function initFlipChallenge() {
+      const start = Number(flipStartBankrollInput.value) || 0;
+      const mult = Number(flipMultiplierInput.value) || 2;
+      const total = Math.max(1, Number(flipTotalInput.value) || 10);
+
+      flipState.startingBankroll = start;
+      flipState.multiplier = mult;
+      flipState.totalFlips = total;
+      flipState.currentFlip = 1;
+      flipState.history = [];
+      saveState();
+      renderFlipModule();
+    }
+
+    function renderFlipModule() {
+      flipStartBankrollInput.value = flipState.startingBankroll || "";
+      flipMultiplierInput.value = flipState.multiplier || 2;
+      flipTotalInput.value = flipState.totalFlips || 10;
+
+      const cf = flipState.currentFlip;
+      if (cf > flipState.totalFlips) {
+        flipMetaDiv.innerHTML = `<span>Challenge complete. You finished all ${
+          flipState.totalFlips
+        } flips.</span>`;
+      } else {
+        const start = currentFlipStart();
+        const target = currentFlipTarget();
+        flipMetaDiv.innerHTML = `
+          <span>Flip: <strong>${cf} / ${flipState.totalFlips}</strong></span>
+          <span>Starting Bankroll this Flip: <strong>${start.toFixed(2)}</strong></span>
+          <span>Target for this Flip (x${flipState.multiplier}): <strong>${target.toFixed(
+          2
+        )}</strong></span>
+        `;
+      }
+
+      flipTableBody.innerHTML = "";
+      const rows = flipState.history || [];
+      for (const h of rows) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${h.flip}</td>
+          <td>${h.start.toFixed(2)}</td>
+          <td>${h.target.toFixed(2)}</td>
+          <td>${h.result.toFixed(2)}</td>
+          <td>${h.status}</td>
+        `;
+        flipTableBody.appendChild(tr);
+      }
+    }
+
+    function saveFlipOutcome() {
+      if (flipState.currentFlip > flipState.totalFlips) {
+        alert("Challenge already complete.");
+        return;
+      }
+
+      const resultVal = Number(flipResultInput.value);
+      if (!resultVal && resultVal !== 0) {
+        alert("Enter the bankroll result after this flip.");
+        return;
+      }
+
+      const flipNum = flipState.currentFlip;
+      const start = currentFlipStart();
+      const target = currentFlipTarget();
+      const status = resultVal >= target ? "Win" : "Loss";
+
+      flipState.history.push({
+        flip: flipNum,
+        start,
+        target,
+        result: resultVal,
+        status
+      });
+
+      flipState.currentFlip = flipNum + 1;
+      flipResultInput.value = "";
+      saveState();
+      renderFlipModule();
+    }
+
+    function exportFlipCSV() {
+      if (!flipState.history.length) {
+        alert("No flip history to export yet.");
+        return;
+      }
+
+      const headers = ["flip", "start", "target", "result", "status"];
+      const rows = flipState.history.map(h => [
+        h.flip,
+        h.start,
+        h.target,
+        h.result,
+        h.status
+      ]);
+
+      const csv =
+        headers.map(csvEscape).join(",") +
+        "\n" +
+        rows.map(r => r.map(csvEscape).join(",")).join("\n");
+
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "at_flip_history.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function resetFlipHistory() {
+      if (!confirm("This will clear only flip history (not your base config). Continue?")) return;
+      flipState.history = [];
+      flipState.currentFlip = 1;
+      saveState();
+      renderFlipModule();
+    }
+
+    // ====== EVENTS ======
     betForm.addEventListener("submit", e => {
       e.preventDefault();
       const data = getFormData();
@@ -1052,13 +1531,34 @@
       speak(recap);
     });
 
+    if (logFilterSelect) {
+      logFilterSelect.addEventListener("change", () => {
+        renderBetsTable();
+      });
+    }
+
+    if (exportBetsBtn) {
+      exportBetsBtn.addEventListener("click", exportBetsCSV);
+    }
+
+    if (resetBetsBtn) {
+      resetBetsBtn.addEventListener("click", resetBets);
+    }
+
+    initFlipBtn.addEventListener("click", initFlipChallenge);
+    saveFlipResultBtn.addEventListener("click", saveFlipOutcome);
+    exportFlipBtn.addEventListener("click", exportFlipCSV);
+    resetFlipBtn.addEventListener("click", resetFlipHistory);
+
+    // ====== INIT ======
     function init() {
       loadState();
       document.getElementById("betDate").value = todayString();
       renderBetsTable();
       renderDashboard();
+      renderFlipModule();
 
-      // Optional: register service worker if you already use sw.js
+      // optional PWA
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register("sw.js").catch(() => {});
       }
