@@ -83,7 +83,6 @@
     }
 
     /* Cards */
-
     .card {
       background: rgba(15, 23, 42, 0.92);
       border-radius: 18px;
@@ -131,7 +130,6 @@
     }
 
     /* Dashboard */
-
     .dashboard-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -182,7 +180,6 @@
     }
 
     /* Buttons */
-
     .btn {
       border: none;
       border-radius: 999px;
@@ -231,7 +228,6 @@
     }
 
     /* Audio */
-
     .audio-controls {
       display: flex;
       align-items: center;
@@ -247,7 +243,6 @@
     }
 
     /* Form */
-
     .form-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -312,7 +307,6 @@
     }
 
     /* Playbook & Combos */
-
     .playbook-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -337,7 +331,6 @@
     }
 
     /* Alerts */
-
     .alert-list {
       list-style: none;
       padding-left: 0;
@@ -354,7 +347,6 @@
     }
 
     /* Table */
-
     .table-wrapper {
       overflow-x: auto;
     }
@@ -417,7 +409,6 @@
     }
 
     /* Heat colors */
-
     .heat-low {
       color: #22c55e;
     }
@@ -430,18 +421,34 @@
       color: #fb7185;
     }
 
-    /* Scroll cards to avoid endless page scroll */
+    /* Scroll cards */
     .scroll-card {
       max-height: 65vh;
       overflow-y: auto;
     }
 
-    .scroll-card h2,
-    .scroll-card .bets-log-controls {
-      position: sticky;
-      top: 0;
-      background: inherit;
-      z-index: 5;
+    .bets-log-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .bets-log-controls select {
+      padding: 0.3rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 0.8rem;
+    }
+
+    .bets-log-buttons {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
     }
 
     /* 10 Flip */
@@ -486,32 +493,7 @@
       margin-bottom: 0.15rem;
     }
 
-    .bets-log-controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .bets-log-controls select {
-      padding: 0.3rem 0.5rem;
-      border-radius: 999px;
-      border: 1px solid #1f2937;
-      background: #020617;
-      color: #e5e7eb;
-      font-size: 0.8rem;
-    }
-
-    .bets-log-buttons {
-      display: flex;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-    }
-
     /* Modal */
-
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -574,11 +556,10 @@
     }
 
     /* Journal */
-
     .journal-textarea {
       width: 100%;
-      min-height: 90px;
-      padding: 0.5rem 0.6rem;
+      min-height: 120px;
+      padding: 0.6rem 0.7rem;
       border-radius: 12px;
       border: 1px solid #1f2937;
       background: #020617;
@@ -588,7 +569,6 @@
     }
 
     /* Cashouts */
-
     .cashout-summary {
       display: flex;
       flex-wrap: wrap;
@@ -657,6 +637,7 @@
     <nav class="top-nav">
       <button class="nav-tab active" data-target="console">Console</button>
       <button class="nav-tab" data-target="flip">10 Flip Challenge</button>
+      <button class="nav-tab" data-target="journal">Journal</button>
     </nav>
 
     <!-- VIEW: CONSOLE -->
@@ -787,20 +768,6 @@
         <p id="noTrapsMsg" class="subtext muted"></p>
       </section>
 
-      <!-- JOURNAL -->
-      <section class="card">
-        <h2>🧾 Journal & Notes</h2>
-        <p class="subtext">
-          Capture what you were thinking before, during, or after the slate. This is how you coach the future you.
-        </p>
-        <textarea id="journalText" class="journal-textarea" placeholder="Today I noticed..."></textarea>
-        <div class="form-actions">
-          <button id="saveJournalBtn" class="btn btn-secondary btn-sm">Save Journal Entry</button>
-        </div>
-        <p class="subtext muted">Recent entries:</p>
-        <ul id="journalList" class="alert-list"></ul>
-      </section>
-
       <!-- CASHOUTS -->
       <section class="card scroll-card">
         <h2>💵 Bankroll Cashouts</h2>
@@ -812,7 +779,7 @@
         <div class="form-grid">
           <div class="form-item">
             <label>Amount</label>
-            <input type="number" id="cashAmount" placeholder="e.g. 250" />
+            <input type="number" id="cashAmount" step="0.01" min="0" placeholder="e.g. 250" />
           </div>
           <div class="form-item">
             <label>Reason / Note</label>
@@ -882,11 +849,11 @@
             </div>
             <div class="form-item">
               <label>Odds (American)</label>
-              <input type="number" id="betOdds" required />
+              <input type="number" id="betOdds" step="0.01" required />
             </div>
             <div class="form-item">
               <label>Stake</label>
-              <input type="number" id="betStake" required />
+              <input type="number" id="betStake" step="0.01" min="0" required />
               <div class="unit-buttons">
                 <button type="button" class="btn btn-secondary btn-sm unit-btn" data-mult="0.5">0.5U</button>
                 <button type="button" class="btn btn-secondary btn-sm unit-btn" data-mult="1">1U</button>
@@ -1003,7 +970,7 @@
         <div class="flip-grid">
           <div class="flip-item">
             <label>Starting Bankroll</label>
-            <input type="number" id="flipStartBankroll" />
+            <input type="number" id="flipStartBankroll" step="0.01" />
           </div>
           <div class="flip-item">
             <label>Target Multiplier per Flip</label>
@@ -1019,12 +986,10 @@
 
         <div class="card" style="margin-top: 1rem; background:#020617;">
           <h3 style="margin-top:0;">Current Flip</h3>
-          <div class="flip-meta" id="flipMeta">
-            <!-- populated by JS -->
-          </div>
+          <div class="flip-meta" id="flipMeta"></div>
           <div class="flip-item">
             <label>Result After This Flip (Bankroll)</label>
-            <input type="number" id="flipResultInput" />
+            <input type="number" id="flipResultInput" step="0.01" />
           </div>
           <button id="saveFlipResultBtn" class="btn btn-secondary" style="margin-top:0.5rem;">
             Save Flip Outcome
@@ -1058,6 +1023,28 @@
             <tbody></tbody>
           </table>
         </div>
+      </section>
+    </div>
+
+    <!-- VIEW: JOURNAL -->
+    <div class="view" data-view="journal">
+      <section class="card">
+        <h2>🧾 Journal & Notes</h2>
+        <p class="subtext">
+          Capture what you were thinking before, during, or after the slate. This is how you coach the future you.
+        </p>
+        <textarea id="journalText" class="journal-textarea" placeholder="Today I noticed..."></textarea>
+        <div class="form-actions">
+          <button id="saveJournalBtn" class="btn btn-secondary btn-sm">Save Journal Entry</button>
+        </div>
+      </section>
+
+      <section class="card scroll-card">
+        <h2>Recent Entries</h2>
+        <p class="subtext">
+          Latest journal entries across all sessions. Use this like film study on your own mind.
+        </p>
+        <ul id="journalList" class="alert-list"></ul>
       </section>
     </div>
   </div>
@@ -1132,7 +1119,7 @@
       multiplier: 2,
       totalFlips: 10,
       currentFlip: 1,
-      history: [] // {flip, start, target, result, status}
+      history: []
     };
 
     let cashouts = [];       // {id,date,time,type,amount,reason}
@@ -1334,7 +1321,7 @@
     const exportFlipBtn = document.getElementById("exportFlipBtn");
     const resetFlipBtn = document.getElementById("resetFlipBtn");
 
-    // ====== NAV (VIEWS) ======
+    // NAV (VIEWS)
     const navTabs = document.querySelectorAll(".nav-tab");
     const views = document.querySelectorAll(".view");
 
@@ -1502,6 +1489,17 @@
     }
 
     // ====== RULE BREAKS & CONTRACT ======
+    function countRuleBreaksToday() {
+      const today = todayString();
+      let count = 0;
+      for (const b of bets) {
+        if (b.date === today && Array.isArray(b.ruleBreaks)) {
+          count += b.ruleBreaks.filter(x => x !== "contract_breach").length;
+        }
+      }
+      return count;
+    }
+
     function evaluateRuleBreaks(bet) {
       const breaks = [];
       const today = todayString();
@@ -1525,17 +1523,6 @@
 
       bet.ruleBreaks = breaks;
       return breaks;
-    }
-
-    function countRuleBreaksToday() {
-      const today = todayString();
-      let count = 0;
-      for (const b of bets) {
-        if (b.date === today && Array.isArray(b.ruleBreaks)) {
-          count += b.ruleBreaks.filter(x => x !== "contract_breach").length;
-        }
-      }
-      return count;
     }
 
     // ====== TRAPS ======
@@ -1623,7 +1610,7 @@
       lastTrapKeys = trapKeys;
     }
 
-    // ====== DISCIPLINE SCORE & HEAT ======
+    // ====== DISCIPLINE & SMART STAKE ======
     function computeDisciplineScore(heatLevel, betsTodayCount) {
       const today = todayString();
       const activeToday = bets.filter(b => b.status === "Active" && b.date === today);
@@ -1651,13 +1638,6 @@
 
       score = Math.max(0, Math.min(100, score));
       return score;
-    }
-
-    function disciplineLabel(score) {
-      if (score >= 80) return "Locked In";
-      if (score >= 60) return "Solid but Slipping";
-      if (score >= 40) return "Sloppy";
-      return "Danger Zone";
     }
 
     function computeSmartStakeRecommendation(heatLevel, disciplineScore) {
@@ -1904,7 +1884,7 @@
       const sorted = journalEntries
         .slice()
         .sort((a, b) => new Date(b.datetime) - new Date(a.datetime))
-        .slice(0, 10);
+        .slice(0, 20);
 
       for (const entry of sorted) {
         const dt = new Date(entry.datetime);
@@ -1940,7 +1920,7 @@
       const sorted = cashouts
         .slice()
         .sort((a, b) => new Date(b.date + " " + b.time) - new Date(a.date + " " + a.time))
-        .slice(0, 50); // latest 50
+        .slice(0, 50);
 
       for (const c of sorted) {
         if (c.type === "cashout") totalOut += c.amount;
@@ -1981,13 +1961,12 @@
         id: generateSimpleId(cashouts),
         date,
         time,
-        type, // "cashout" or "deposit"
+        type,
         amount: rawAmount,
         reason
       };
       cashouts.push(event);
 
-      // adjust bankroll
       const current = Number(settings.bankroll || 0);
       const delta = type === "cashout" ? -rawAmount : rawAmount;
       settings.bankroll = current + delta;
@@ -2051,7 +2030,6 @@
         totalBetsCount === 0 ? 0 : (wins / (wins + losses || 1)) * 100;
       winRateSpan.textContent = `${winRate.toFixed(1)}%`;
 
-      // Session stats
       let sessionNet = 0;
       let sessionBetsCount = 0;
       if (settings.sessionId) {
@@ -2068,7 +2046,6 @@
       sessionPLSpan.textContent = sessionNet.toFixed(2);
       sessionBetsSpan.textContent = sessionBetsCount;
 
-      // Heat
       const recentActive = activeBets
         .filter(b => b.date === today)
         .sort((a, b) => b.id - a.id)
@@ -2088,12 +2065,10 @@
       }
       lastHeatLevel = heatScore;
 
-      // Discipline score & rules broken
       const disciplineScore = computeDisciplineScore(heatScore, betsTodayCount);
       disciplineScoreSpan.textContent = disciplineScore.toFixed(0);
       rulesBrokenTodaySpan.textContent = countRuleBreaksToday();
 
-      // Session status vs goals
       const target = Number(settings.dailyTarget || 0);
       const maxLoss = Number(settings.maxLoss || 0);
       let statusText = "Status: In Range.";
@@ -2624,5 +2599,3 @@
   </script>
 </body>
 </html>
-
-
