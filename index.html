@@ -4,7 +4,327 @@
   <meta charset="UTF-8" />
   <title>A-T Trading Console – Phase 2</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css" />
+  <meta name="theme-color" content="#050810" />
+  <!-- Keep / adjust this if you already have a manifest -->
+  <link rel="manifest" href="manifest.json" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #050810;
+      color: #f5f5f5;
+    }
+
+    .app {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    .app-header {
+      text-align: left;
+      margin-bottom: 1.5rem;
+    }
+
+    .app-header h1 {
+      margin: 0;
+      font-size: 1.9rem;
+    }
+
+    .app-header p {
+      margin: 0.3rem 0 0;
+      color: #9ca3af;
+    }
+
+    /* Cards */
+
+    .card {
+      background: #0b0f1c;
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.25rem;
+      border: 1px solid #1f2937;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+    }
+
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .subtext {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtext.muted {
+      opacity: 0.7;
+    }
+
+    /* Dashboard */
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .dash-item {
+      background: #020617;
+      border-radius: 12px;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid #111827;
+    }
+
+    .dash-item label,
+    .dash-item .label {
+      display: block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: #9ca3af;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.2rem;
+    }
+
+    .dash-item input {
+      width: 100%;
+      padding: 0.35rem 0.45rem;
+      border-radius: 8px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      color: #e5e7eb;
+    }
+
+    .dash-item .value {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .dash-item .heat {
+      font-size: 1.2rem;
+    }
+
+    .dashboard-actions {
+      margin-top: 0.4rem;
+    }
+
+    /* Buttons */
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 0.45rem 0.9rem;
+      margin-right: 0.35rem;
+      cursor: pointer;
+      font-size: 0.85rem;
+      background: #111827;
+      color: #e5e7eb;
+      transition: background 0.18s, transform 0.1s;
+    }
+
+    .btn-primary {
+      background: #16a34a;
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: #374151;
+    }
+
+    .btn-sm {
+      padding: 0.25rem 0.6rem;
+      font-size: 0.75rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      filter: brightness(0.95);
+    }
+
+    /* Audio */
+
+    .audio-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    .audio-controls label {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    /* Form */
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .form-item label {
+      display: block;
+      font-size: 0.75rem;
+      margin-bottom: 0.25rem;
+      color: #9ca3af;
+    }
+
+    .form-item input,
+    .form-item select {
+      width: 100%;
+      padding: 0.4rem 0.5rem;
+      border-radius: 8px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      color: #e5e7eb;
+    }
+
+    .form-actions {
+      margin-top: 0.9rem;
+    }
+
+    /* Playbook & Combos */
+
+    .playbook-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+
+    .playbook-block {
+      background: #020617;
+      border-radius: 12px;
+      padding: 0.75rem 0.9rem;
+      border: 1px solid #111827;
+    }
+
+    .list {
+      margin: 0.3rem 0 0;
+      padding-left: 1.2rem;
+      font-size: 0.8rem;
+    }
+
+    .list li {
+      margin-bottom: 0.25rem;
+    }
+
+    /* Alerts */
+
+    .alert-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0.25rem 0 0;
+      font-size: 0.8rem;
+    }
+
+    .alert-list li {
+      padding: 0.35rem 0.5rem;
+      margin-bottom: 0.25rem;
+      border-radius: 8px;
+      background: #020617;
+      border: 1px solid #111827;
+    }
+
+    /* Table */
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+
+    th,
+    td {
+      padding: 0.5rem 0.4rem;
+      text-align: left;
+    }
+
+    thead {
+      background: #020617;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #030712;
+    }
+
+    tbody tr:nth-child(odd) {
+      background: #020617;
+    }
+
+    .status-pill {
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+    }
+
+    .status-active {
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+    }
+
+    .status-void {
+      background: rgba(248, 113, 113, 0.15);
+      color: #fb7185;
+    }
+
+    .result-win {
+      color: #4ade80;
+    }
+
+    .result-loss {
+      color: #f97373;
+    }
+
+    .result-push {
+      color: #e5e7eb;
+    }
+
+    .result-pending {
+      color: #facc15;
+    }
+
+    /* Heat colors */
+
+    .heat-low {
+      color: #22c55e;
+    }
+
+    .heat-medium {
+      color: #facc15;
+    }
+
+    .heat-high {
+      color: #fb7185;
+    }
+  </style>
 </head>
 <body>
   <div class="app">
@@ -186,9 +506,566 @@
         </table>
       </div>
     </section>
-
   </div>
-  <script src="app.js"></script>
+
+  <script>
+    // A-T Trading Console – Phase 2 Engine (single-file version)
+
+    let bets = [];
+    let settings = {
+      bankroll: 0,
+      sessionBankroll: 0,
+      sessionId: "",
+      audioEnabled: false
+    };
+
+    let editingBetId = null;
+    let lastHeatLevel = 0;
+    let lastTrapKeys = [];
+
+    // ---- Storage ----
+    function loadState() {
+      const storedBets = localStorage.getItem("at_bets");
+      const storedSettings = localStorage.getItem("at_settings");
+      if (storedBets) {
+        bets = JSON.parse(storedBets);
+      }
+      if (storedSettings) {
+        settings = JSON.parse(storedSettings);
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem("at_bets", JSON.stringify(bets));
+      localStorage.setItem("at_settings", JSON.stringify(settings));
+    }
+
+    function generateBetId() {
+      return bets.length ? Math.max(...bets.map(b => b.id)) + 1 : 1;
+    }
+
+    function todayString() {
+      const d = new Date();
+      return d.toISOString().split("T")[0];
+    }
+
+    function calculateNet(result, stake, odds, status) {
+      if (status !== "Active") return 0;
+      if (!result || result === "Pending") return 0;
+      stake = Number(stake || 0);
+      odds = Number(odds || 0);
+      if (!stake || !odds) return 0;
+
+      if (result === "Push") return 0;
+      if (result === "Loss") return -stake;
+      if (result === "Win") {
+        if (odds > 0) {
+          return (stake * odds) / 100;
+        } else {
+          return (stake * 100) / Math.abs(odds);
+        }
+      }
+      return 0;
+    }
+
+    function parseHourFromTimeString(timeStr) {
+      if (!timeStr) return null;
+      const parts = timeStr.split(":");
+      if (parts.length < 2) return null;
+      const hh = parseInt(parts[0], 10);
+      const mm = parseInt(parts[1], 10);
+      if (isNaN(hh)) return null;
+      return hh + (isNaN(mm) ? 0 : mm / 60);
+    }
+
+    // ---- Audio ----
+    function speak(text) {
+      if (!settings.audioEnabled) return;
+      if (!window.speechSynthesis) return;
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.rate = 1;
+      utter.pitch = 1;
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utter);
+    }
+
+    // ---- UI References ----
+    const currentBankrollInput = document.getElementById("currentBankroll");
+    const sessionBankrollInput = document.getElementById("sessionBankroll");
+    const dailyPLSpan = document.getElementById("dailyPL");
+    const totalPLSpan = document.getElementById("totalPL");
+    const winRateSpan = document.getElementById("winRate");
+    const betsTodaySpan = document.getElementById("betsToday");
+    const heatLevelSpan = document.getElementById("heatLevel");
+    const sessionIdSpan = document.getElementById("sessionId");
+
+    const startSessionBtn = document.getElementById("startSessionBtn");
+    const saveBankrollBtn = document.getElementById("saveBankrollBtn");
+
+    const betForm = document.getElementById("betForm");
+    const formTitle = document.getElementById("formTitle");
+    const submitBetBtn = document.getElementById("submitBetBtn");
+    const cancelEditBtn = document.getElementById("cancelEditBtn");
+
+    const betsTableBody = document.querySelector("#betsTable tbody");
+
+    const playbook3List = document.getElementById("playbook3List");
+    const combosList = document.getElementById("combosList");
+
+    const trapList = document.getElementById("trapList");
+    const noTrapsMsg = document.getElementById("noTrapsMsg");
+
+    const audioToggle = document.getElementById("audioToggle");
+    const speakRecapBtn = document.getElementById("speakRecapBtn");
+
+    // ---- Rendering: Bets Table ----
+    function renderBetsTable() {
+      betsTableBody.innerHTML = "";
+      const sorted = [...bets].sort((a, b) => a.id - b.id);
+
+      for (const bet of sorted) {
+        const tr = document.createElement("tr");
+
+        const statusClass = bet.status === "Active" ? "status-active" : "status-void";
+        const resultClass =
+          bet.result === "Win"
+            ? "result-win"
+            : bet.result === "Loss"
+            ? "result-loss"
+            : bet.result === "Push"
+            ? "result-push"
+            : "result-pending";
+
+        tr.innerHTML = `
+          <td>${bet.id}</td>
+          <td>${bet.date}</td>
+          <td>${bet.time}</td>
+          <td>${bet.sport || ""}</td>
+          <td>${bet.market || ""}</td>
+          <td>${bet.description || ""}</td>
+          <td>${bet.odds}</td>
+          <td>${bet.stake}</td>
+          <td class="${resultClass}">${bet.result}</td>
+          <td>${bet.riskTag || ""}</td>
+          <td>${bet.net.toFixed(2)}</td>
+          <td>
+            <span class="status-pill ${statusClass}">
+              ${bet.status}
+            </span>
+          </td>
+          <td>
+            <button class="btn btn-secondary btn-sm edit" data-id="${bet.id}">Edit</button>
+            <button class="btn btn-secondary btn-sm void" data-id="${bet.id}">
+              ${bet.status === "Active" ? "Void" : "Unvoid"}
+            </button>
+          </td>
+        `;
+        betsTableBody.appendChild(tr);
+      }
+
+      betsTableBody.querySelectorAll(".edit").forEach(btn => {
+        btn.addEventListener("click", () => startEditBet(Number(btn.dataset.id)));
+      });
+      betsTableBody.querySelectorAll(".void").forEach(btn => {
+        btn.addEventListener("click", () => toggleVoidBet(Number(btn.dataset.id)));
+      });
+    }
+
+    // ---- Playbook & Combos ----
+    function riskWeight(riskTag) {
+      if (riskTag === "Safe") return 1.5;
+      if (riskTag === "Standard") return 1.0;
+      if (riskTag === "Aggressive") return 0.5;
+      return 1.0;
+    }
+
+    function buildCandidateBets() {
+      const today = todayString();
+      return bets.filter(
+        b =>
+          b.status === "Active" &&
+          b.result === "Pending" &&
+          b.date === today
+      );
+    }
+
+    function renderPlaybookAndCombos() {
+      const candidates = buildCandidateBets();
+
+      // 3-Bet Controlled Playbook
+      playbook3List.innerHTML = "";
+      if (candidates.length === 0) {
+        const li = document.createElement("li");
+        li.textContent = "No pending bets for today. Log plays to build the playbook.";
+        playbook3List.appendChild(li);
+      } else {
+        const scored = candidates.map(b => {
+          const score = (b.confidence || 3) * riskWeight(b.riskTag);
+          return { bet: b, score };
+        });
+
+        scored.sort((a, b) => b.score - a.score);
+        const top3 = scored.slice(0, 3);
+
+        for (const { bet, score } of top3) {
+          const li = document.createElement("li");
+          li.textContent = `#${bet.id} – ${bet.sport || ""} ${bet.market || ""} – ${
+            bet.description || ""
+          } | Odds ${bet.odds} | Stake ${bet.stake} | Risk ${bet.riskTag} | Conf ${
+            bet.confidence
+          } | Score ${score.toFixed(2)}`;
+          playbook3List.appendChild(li);
+        }
+      }
+
+      // 2-Leg Combos
+      combosList.innerHTML = "";
+      if (candidates.length < 2) {
+        const li = document.createElement("li");
+        li.textContent = "Need at least 2 pending bets today to build combos.";
+        combosList.appendChild(li);
+        return;
+      }
+
+      const combos = [];
+      for (let i = 0; i < candidates.length; i++) {
+        for (let j = i + 1; j < candidates.length; j++) {
+          const a = candidates[i];
+          const b = candidates[j];
+          const scoreA = (a.confidence || 3) * riskWeight(a.riskTag);
+          const scoreB = (b.confidence || 3) * riskWeight(b.riskTag);
+          let comboScore = scoreA + scoreB;
+
+          if (a.riskTag === "Aggressive" && b.riskTag === "Aggressive") {
+            comboScore -= 1;
+          }
+          combos.push({ a, b, comboScore });
+        }
+      }
+
+      combos.sort((x, y) => y.comboScore - x.comboScore);
+      const topCombos = combos.slice(0, 3);
+
+      for (const { a, b, comboScore } of topCombos) {
+        const li = document.createElement("li");
+        li.textContent = `[#${a.id} + #${b.id}] – ${a.description || ""} + ${
+          b.description || ""
+        } | Risk: ${a.riskTag}/${b.riskTag} | Conf: ${a.confidence}/${b.confidence} | Score ${comboScore.toFixed(
+          2
+        )}`;
+        combosList.appendChild(li);
+      }
+    }
+
+    // ---- Traps & Alerts ----
+    function computeTraps() {
+      const traps = [];
+      const today = todayString();
+      const activeToday = bets
+        .filter(b => b.status === "Active" && b.date === today)
+        .sort((a, b) => a.id - b.id);
+
+      const betsToday = activeToday.length;
+
+      if (betsToday >= 8) {
+        traps.push({
+          key: "high_volume",
+          message: "High volume today: 8+ bets logged. This is a danger zone for overtrading."
+        });
+      }
+
+      if (activeToday.length >= 3) {
+        const last3 = activeToday.slice(-3);
+        if (last3.every(b => b.result === "Loss")) {
+          traps.push({
+            key: "three_losses",
+            message: "Last 3 bets today were losses. Chasing risk is high."
+          });
+        }
+      }
+
+      const aggressiveCount = activeToday.filter(b => b.riskTag === "Aggressive").length;
+      if (aggressiveCount >= 3) {
+        traps.push({
+          key: "aggressive_cluster",
+          message: "You have 3+ aggressive bets today. Check if you’re forcing action."
+        });
+      }
+
+      const lateBets = activeToday.filter(b => {
+        const hour = parseHourFromTimeString(b.time);
+        return hour !== null && hour >= 21.5;
+      });
+      if (lateBets.length >= 4) {
+        traps.push({
+          key: "late_night",
+          message: "Heavy volume after 9:30 PM. Historically discipline collapses here."
+        });
+      }
+
+      return traps;
+    }
+
+    function renderTraps() {
+      const traps = computeTraps();
+      trapList.innerHTML = "";
+
+      if (traps.length === 0) {
+        noTrapsMsg.textContent =
+          "No active traps detected. Stay disciplined and follow the framework.";
+      } else {
+        noTrapsMsg.textContent = "";
+      }
+
+      const trapKeys = traps.map(t => t.key);
+      const newTraps = traps.filter(t => !lastTrapKeys.includes(t.key));
+
+      for (const t of traps) {
+        const li = document.createElement("li");
+        li.textContent = t.message;
+        trapList.appendChild(li);
+      }
+
+      if (newTraps.length > 0) {
+        const spoken = newTraps.map(t => t.message).join(" ");
+        speak("Trap alert. " + spoken);
+      }
+
+      lastTrapKeys = trapKeys;
+    }
+
+    // ---- Dashboard ----
+    function renderDashboard() {
+      currentBankrollInput.value =
+        settings.bankroll !== undefined ? settings.bankroll : "";
+      sessionBankrollInput.value =
+        settings.sessionBankroll !== undefined ? settings.sessionBankroll : "";
+      sessionIdSpan.textContent = settings.sessionId || "—";
+      audioToggle.checked = !!settings.audioEnabled;
+
+      const today = todayString();
+      let dailyNet = 0;
+      let totalNet = 0;
+      let wins = 0;
+      let losses = 0;
+      let totalBetsCount = 0;
+      let betsTodayCount = 0;
+
+      const activeBets = bets.filter(b => b.status === "Active");
+
+      for (const b of activeBets) {
+        totalNet += b.net;
+        if (b.result === "Win") wins++;
+        if (b.result === "Loss") losses++;
+        if (b.result === "Win" || b.result === "Loss") totalBetsCount++;
+
+        if (b.date === today) {
+          dailyNet += b.net;
+          betsTodayCount++;
+        }
+      }
+
+      dailyPLSpan.textContent = dailyNet.toFixed(2);
+      totalPLSpan.textContent = totalNet.toFixed(2);
+      betsTodaySpan.textContent = betsTodayCount;
+
+      const winRate =
+        totalBetsCount === 0 ? 0 : (wins / (wins + losses || 1)) * 100;
+      winRateSpan.textContent = `${winRate.toFixed(1)}%`;
+
+      const recentActive = activeBets
+        .filter(b => b.date === today)
+        .sort((a, b) => b.id - a.id)
+        .slice(0, 5);
+
+      const recentLosses = recentActive.filter(b => b.result === "Loss").length;
+      const heatBase = betsTodayCount;
+      let heatScore = Math.min(10, heatBase + recentLosses * 2);
+
+      heatLevelSpan.textContent = heatScore.toString();
+      heatLevelSpan.classList.remove("heat-low", "heat-medium", "heat-high");
+      if (heatScore <= 3) heatLevelSpan.classList.add("heat-low");
+      else if (heatScore <= 7) heatLevelSpan.classList.add("heat-medium");
+      else heatLevelSpan.classList.add("heat-high");
+
+      if (heatScore >= 8 && lastHeatLevel < 8) {
+        speak("Heat is high. Consider slowing down or shutting it down.");
+      }
+      lastHeatLevel = heatScore;
+
+      renderPlaybookAndCombos();
+      renderTraps();
+    }
+
+    // ---- Bets CRUD ----
+    function getFormData() {
+      return {
+        date: document.getElementById("betDate").value || todayString(),
+        time:
+          document.getElementById("betTime").value ||
+          new Date().toTimeString().slice(0, 5),
+        sport: document.getElementById("betSport").value.trim(),
+        market: document.getElementById("betMarket").value.trim(),
+        description: document.getElementById("betDescription").value.trim(),
+        odds: Number(document.getElementById("betOdds").value),
+        stake: Number(document.getElementById("betStake").value),
+        result: document.getElementById("betResult").value,
+        riskTag: document.getElementById("betRiskTag").value,
+        confidence: Number(document.getElementById("betConfidence").value),
+        emotion: document.getElementById("betEmotion").value.trim()
+      };
+    }
+
+    function setFormData(bet) {
+      document.getElementById("betDate").value = bet.date;
+      document.getElementById("betTime").value = bet.time;
+      document.getElementById("betSport").value = bet.sport;
+      document.getElementById("betMarket").value = bet.market;
+      document.getElementById("betDescription").value = bet.description;
+      document.getElementById("betOdds").value = bet.odds;
+      document.getElementById("betStake").value = bet.stake;
+      document.getElementById("betResult").value = bet.result;
+      document.getElementById("betRiskTag").value = bet.riskTag;
+      document.getElementById("betConfidence").value = bet.confidence;
+      document.getElementById("betEmotion").value = bet.emotion || "";
+    }
+
+    function clearForm() {
+      betForm.reset();
+      document.getElementById("betDate").value = todayString();
+    }
+
+    function startEditBet(id) {
+      const bet = bets.find(b => b.id === id);
+      if (!bet) return;
+      editingBetId = id;
+      formTitle.textContent = `Edit Bet #${id}`;
+      submitBetBtn.textContent = "Update Bet";
+      cancelEditBtn.style.display = "inline-block";
+      setFormData(bet);
+    }
+
+    function cancelEdit() {
+      editingBetId = null;
+      formTitle.textContent = "Log Bet";
+      submitBetBtn.textContent = "Save Bet";
+      cancelEditBtn.style.display = "none";
+      clearForm();
+    }
+
+    function toggleVoidBet(id) {
+      const bet = bets.find(b => b.id === id);
+      if (!bet) return;
+      bet.status = bet.status === "Active" ? "Void" : "Active";
+      bet.net = calculateNet(bet.result, bet.stake, bet.odds, bet.status);
+      saveState();
+      renderBetsTable();
+      renderDashboard();
+    }
+
+    // ---- Session ----
+    function startNewSession() {
+      const now = new Date();
+      const stamp = now.toISOString().replace(/[-:]/g, "").slice(0, 15);
+      const newId = `S_${stamp}`;
+      settings.sessionId = newId;
+      settings.sessionBankroll = Number(currentBankrollInput.value) || 0;
+      saveState();
+      renderDashboard();
+    }
+
+    // ---- Events ----
+    betForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const data = getFormData();
+      if (!data.odds || !data.stake) {
+        alert("Odds and stake are required.");
+        return;
+      }
+
+      if (editingBetId !== null) {
+        const bet = bets.find(b => b.id === editingBetId);
+        if (!bet) return;
+        Object.assign(bet, data);
+        bet.sessionId = settings.sessionId;
+        bet.status = bet.status || "Active";
+        bet.net = calculateNet(bet.result, bet.stake, bet.odds, bet.status);
+      } else {
+        const newBet = {
+          id: generateBetId(),
+          ...data,
+          sessionId: settings.sessionId,
+          status: "Active",
+          createdAt: new Date().toISOString()
+        };
+        newBet.net = calculateNet(
+          newBet.result,
+          newBet.stake,
+          newBet.odds,
+          newBet.status
+        );
+        bets.push(newBet);
+      }
+
+      saveState();
+      renderBetsTable();
+      renderDashboard();
+      cancelEdit();
+    });
+
+    cancelEditBtn.addEventListener("click", cancelEdit);
+    startSessionBtn.addEventListener("click", startNewSession);
+
+    saveBankrollBtn.addEventListener("click", () => {
+      settings.bankroll = Number(currentBankrollInput.value) || 0;
+      settings.sessionBankroll = Number(sessionBankrollInput.value) || 0;
+      saveState();
+      renderDashboard();
+    });
+
+    audioToggle.addEventListener("change", () => {
+      settings.audioEnabled = audioToggle.checked;
+      saveState();
+    });
+
+    speakRecapBtn.addEventListener("click", () => {
+      const today = todayString();
+      const activeToday = bets.filter(
+        b => b.status === "Active" && b.date === today
+      );
+      const betsToday = activeToday.length;
+      const dailyNet = activeToday.reduce((sum, b) => sum + b.net, 0);
+      const heat = heatLevelSpan.textContent || "0";
+
+      const traps = computeTraps();
+      const trapText =
+        traps.length === 0
+          ? "No active traps detected."
+          : traps.map(t => t.message).join(" ");
+
+      const recap = `Session ${settings.sessionId || "not set"}. 
+      Bets today: ${betsToday}. 
+      Daily profit or loss: ${dailyNet.toFixed(2)}. 
+      Current heat level: ${heat}. 
+      ${trapText}`;
+
+      speak(recap);
+    });
+
+    function init() {
+      loadState();
+      document.getElementById("betDate").value = todayString();
+      renderBetsTable();
+      renderDashboard();
+
+      // Optional: register service worker if you already use sw.js
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("sw.js").catch(() => {});
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
 </body>
 </html>
 
